@@ -1,0 +1,26 @@
+{
+    "currentPluginMetadata": {
+        "id": "225af2d93887868f8179665uy661c2c3",
+        "name": "ScrapHelpV2",
+        "author": "NEKN3X",
+        "version": "1.0.0",
+        "language": "javascript_v2",
+        "description": "Scrapboxページを検索する",
+        "website": "https://github.com/Flow-Launcher/Flow.Launcher.Plugin.ScrapHelp",
+        "disabled": false,
+        "homeDisabled": false,
+        "executeFilePath": "C:\\Users\\mallow\\AppData\\Roaming\\FlowLauncher\\Plugins\\ScrapHelpV2\\dist/index.js",
+        "executeFileName": "dist/index.js",
+        "pluginDirectory": "C:\\Users\\mallow\\AppData\\Roaming\\FlowLauncher\\Plugins\\ScrapHelpV2",
+        "actionKeyword": "h",
+        "actionKeywords": [
+            "h"
+        ],
+        "hideActionKeywordPanel": false,
+        "searchDelayTime": null,
+        "icoPath": "C:\\Users\\mallow\\AppData\\Roaming\\FlowLauncher\\Plugins\\ScrapHelpV2\\Images\\app.png",
+        "pluginSettingsDirectoryPath": "C:\\Users\\mallow\\AppData\\Roaming\\FlowLauncher\\Settings\\Plugins\\ScrapHelpV2",
+        "pluginCacheDirectoryPath": "C:\\Users\\mallow\\AppData\\Roaming\\FlowLauncher\\Cache\\Plugins\\ScrapHelpV2"
+    },
+    "api": {}
+}
