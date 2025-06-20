@@ -7,6 +7,7 @@ export async function makeResult(
     return item.pages.flatMap((page) => {
       return {
         title: page.title,
+        subTitle: `/${item.project}`,
         jsonRPCAction: {
           method: "open_url",
           parameters: [
