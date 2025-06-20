@@ -1,17 +1,25 @@
 import { SearchHelpResult } from "../domain/getAllHelp.js";
 import { expandHelpfeel } from "../scrapbox/parser.js";
 
-const copyScrapboxLinkContext = (text: string) => [
-  "Copy Scrapbox Link",
-  "copy_text",
-  text,
-];
+const copyScrapboxLinkContext = (text: string): ResultItem => ({
+  title: "Copy Scrapbox Link",
+  subTitle: text,
+  icoPath: "assets/clipboard.png",
+  jsonRPCAction: {
+    method: "copy_text",
+    parameters: [text],
+  },
+});
 
-const openScrapboxPageContext = (url: string) => [
-  "Open Scrapbox Page",
-  "open_url",
-  url,
-];
+const openScrapboxPageContext = (url: URL): ResultItem => ({
+  title: "Open Scrapbox Page",
+  subTitle: decodeURIComponent(url.pathname),
+  icoPath: "assets/sticky-note.png",
+  jsonRPCAction: {
+    method: "open_url",
+    parameters: [url],
+  },
+});
 
 export async function makeResult(help: SearchHelpResult, glossary: Glossary) {
   return help.flatMap((item) => {
@@ -29,9 +37,9 @@ export async function makeResult(help: SearchHelpResult, glossary: Glossary) {
               )}`,
             ],
           },
-          contextData: copyScrapboxLinkContext(
-            `[/${item.project}/${page.title}]`
-          ),
+          contextData: [
+            copyScrapboxLinkContext(`[/${item.project}/${page.title}]`),
+          ],
         },
         ...page.help
           .flatMap((x): ResultItem[] => {
@@ -50,9 +58,9 @@ export async function makeResult(help: SearchHelpResult, glossary: Glossary) {
                         }/${encodeURIComponent(x.title)}`,
                       ],
                     },
-                    contextData: copyScrapboxLinkContext(
-                      `[/${item.project}/${x.title}]`
-                    ),
+                    contextData: [
+                      copyScrapboxLinkContext(`[/${item.project}/${x.title}]`),
+                    ],
                   },
                 ];
               case "web":
@@ -66,9 +74,11 @@ export async function makeResult(help: SearchHelpResult, glossary: Glossary) {
                       method: "open_url",
                       parameters: [url],
                     },
-                    contextData: copyScrapboxLinkContext(
-                      `[/${item.project}/${page.title}]`
-                    ),
+                    contextData: [
+                      copyScrapboxLinkContext(
+                        `[/${item.project}/${page.title}]`
+                      ),
+                    ],
                   },
                 ];
               case "text":
@@ -81,9 +91,13 @@ export async function makeResult(help: SearchHelpResult, glossary: Glossary) {
                       method: "copy_text",
                       parameters: [x.text],
                     },
-                    contextData: openScrapboxPageContext(
-                      `https://scrapbox.io/${item.project}/${page.title}`
-                    ),
+                    contextData: [
+                      openScrapboxPageContext(
+                        new URL(
+                          `https://scrapbox.io/${item.project}/${page.title}`
+                        )
+                      ),
+                    ],
                   },
                 ];
               case "file":
@@ -96,9 +110,13 @@ export async function makeResult(help: SearchHelpResult, glossary: Glossary) {
                       method: "copy_file",
                       parameters: [item.project, page.title, x.fileName],
                     },
-                    contextData: openScrapboxPageContext(
-                      `https://scrapbox.io/${item.project}/${page.title}`
-                    ),
+                    contextData: [
+                      openScrapboxPageContext(
+                        new URL(
+                          `https://scrapbox.io/${item.project}/${page.title}`
+                        )
+                      ),
+                    ],
                   },
                 ];
               default:

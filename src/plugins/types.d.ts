@@ -10,7 +10,7 @@ type ResultItem = {
     method: string;
     parameters: any[];
   };
-  contextData?: string[];
+  contextData?: ResultItem[];
 };
 
 type GetFile = (
