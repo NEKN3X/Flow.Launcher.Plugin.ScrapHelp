@@ -1,8 +1,9 @@
+import { unlinkSync } from "node:fs";
 import { GetLines, GetTitles } from "../domain/getAllHelp.js";
 import { scrapboxApi } from "../scrapbox/api.js";
 import { defineReadCache, defineWriteCache } from "../utils/cache.js";
 
-const timeout = 1000 * 60 * 0.5;
+const timeout = 1000 * 60 * 0.25;
 
 export function encodeFilename(input: string): string {
   return input.replace(
@@ -22,6 +23,17 @@ function _defineGetTitles(context: Context, settings: Settings) {
     );
     const getAndWriteCache = async () => {
       const res = await scrapboxApi.searchTitles(project, settings.sid);
+
+      cache?.data.forEach((page) => {
+        if (!res.some((r) => r.title === page.title)) {
+          unlinkSync(
+            `${
+              context.currentPluginMetadata.pluginCacheDirectoryPath
+            }/${encodeFilename(`${project}-${page.title}`)}.json`
+          );
+        }
+      });
+
       writeCache(key, res);
 
       await Promise.all(
