@@ -3,11 +3,12 @@ import { getAllHelp } from "./getAllHelp.js";
 test("getAllHelp", async () => {
   const mockGetTitles = () => Promise.resolve(["Title1", "Title2"]);
   const mockGetLines = () =>
-    Promise.resolve(["? webhelp", "% https://example.com"]);
+    Promise.resolve(["? webhelp{scrapbox}", "% https://example.com"]);
 
   const projects = ["Project1"];
 
   const glossary = new Map<string, string>();
+  glossary.set("scrapbox", "(scrapbox|cosense)");
 
   const result = await getAllHelp(
     projects,
@@ -22,13 +23,21 @@ test("getAllHelp", async () => {
         {
           title: "Title1",
           help: [
-            { type: "web", url: "https://example.com", helpfeel: "webhelp" },
+            {
+              type: "web",
+              url: "https://example.com",
+              helpfeel: "webhelp(scrapbox|cosense)",
+            },
           ],
         },
         {
           title: "Title2",
           help: [
-            { type: "web", url: "https://example.com", helpfeel: "webhelp" },
+            {
+              type: "web",
+              url: "https://example.com",
+              helpfeel: "webhelp(scrapbox|cosense)",
+            },
           ],
         },
       ],

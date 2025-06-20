@@ -11,6 +11,12 @@ export type SearchHelpResult = {
   }[];
 }[];
 
+export function replaceGlossary(text: string, glossary: Glossary) {
+  return text.replace(/\{(.*)\}/g, (match, p1) => {
+    return glossary.get(p1) || match;
+  });
+}
+
 export function getAllHelp(
   projects: string[],
   getTitles: GetTitles,
@@ -23,9 +29,13 @@ export function getAllHelp(
       const pages = await Promise.all(
         titles.map(async (title) => {
           const lines = await getLines(project, title);
+          const help = extractHelp(project, title, lines);
           return {
             title,
-            help: extractHelp(project, title, lines),
+            help: help.map((h) => ({
+              ...h,
+              helpfeel: replaceGlossary(h.helpfeel, glossary),
+            })),
           };
         })
       );
