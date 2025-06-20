@@ -1,7 +1,7 @@
-const helpfeel = /\s*\?\s+(.*)$/;
-const urlHelpRegex = /\s*(\%|\$)\s+(https?.+)$/;
-const fileHelpRegex = /\s*(\%|\$)\s+(.+\.(.+))$/;
-const textHelpRegex = /\s*(\%|\$)\s+(.+)$/;
+const helpfeel = /^\s*\?\s+(.*)$/;
+const urlHelpRegex = /^\s*(\%|\$)\s+(https?.+)$/;
+const fileHelpRegex = /^\s*(\%|\$)\s+(.+\.(.+))$/;
+const textHelpRegex = /^\s*(\%|\$)\s+(.+)$/;
 
 function makeWebHelp(helpfeel: string, nextLine: string): WebHelp | null {
   const match = nextLine.match(urlHelpRegex);
