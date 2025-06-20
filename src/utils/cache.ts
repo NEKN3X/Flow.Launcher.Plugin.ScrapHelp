@@ -8,7 +8,10 @@ type CacheData<T> = {
 export type WriteCache<T> = (key: string, value: T) => void;
 export type ReadCache<T> = (key: string) => CacheData<T> | undefined;
 
-export function defineWriteCache<T>(cachePath: string): WriteCache<T> {
+export function defineWriteCache<T>(
+  cachePath: string,
+  timestamp?: number
+): WriteCache<T> {
   return (key: string, value: T) => {
     mkdirSync(cachePath, { recursive: true });
     writeFileSync(
@@ -16,7 +19,7 @@ export function defineWriteCache<T>(cachePath: string): WriteCache<T> {
       JSON.stringify(
         {
           data: value,
-          timestamp: Date.now(),
+          timestamp: timestamp ?? Date.now(),
         },
         null,
         2

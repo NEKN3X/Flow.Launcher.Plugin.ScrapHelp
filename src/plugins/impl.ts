@@ -2,7 +2,7 @@ import { GetLines, GetTitles } from "../domain/getAllHelp.js";
 import { scrapboxApi } from "../scrapbox/api.js";
 import { defineReadCache, defineWriteCache } from "../utils/cache.js";
 
-const timeout = 1000 * 60;
+const timeout = 1000 * 60 * 0.5;
 
 export function encodeFilename(input: string): string {
   return input.replace(
@@ -11,24 +11,45 @@ export function encodeFilename(input: string): string {
   );
 }
 
-export function defineGetTitles(
-  context: Context,
-  settings: Settings
-): GetTitles {
+function _defineGetTitles(context: Context, settings: Settings) {
   return async (project: string) => {
     const key = encodeFilename(project);
-    const cache = defineReadCache<string[]>(
+    const cache = defineReadCache<SearchTitlesResponse>(
       context.currentPluginMetadata.pluginCacheDirectoryPath
     )(key);
-    const writeCache = defineWriteCache<string[]>(
+    const writeCache = defineWriteCache<SearchTitlesResponse>(
       context.currentPluginMetadata.pluginCacheDirectoryPath
     );
     const getAndWriteCache = async () => {
-      const titles = await scrapboxApi
-        .searchTitles(project, settings.sid)
-        .then((response) => response.map((title) => title.title));
-      writeCache(key, titles);
-      return titles;
+      const res = await scrapboxApi.searchTitles(project, settings.sid);
+      writeCache(key, res);
+
+      await Promise.all(
+        res.map(async (title) => {
+          const linesKey = encodeFilename(`${project}-${title.title}`);
+          const linesCache = defineReadCache<string[]>(
+            context.currentPluginMetadata.pluginCacheDirectoryPath
+          )(linesKey);
+          if (
+            linesCache === undefined ||
+            linesCache.timestamp < title.updated
+          ) {
+            const writeLinesCache = defineWriteCache<string[]>(
+              context.currentPluginMetadata.pluginCacheDirectoryPath,
+              title.updated
+            );
+            const lines = await scrapboxApi.pageText(
+              project,
+              title.title,
+              settings.sid
+            );
+            writeLinesCache(linesKey, lines);
+          }
+          return Promise.resolve();
+        })
+      );
+
+      return res;
     };
     if (cache !== undefined) {
       if (Date.now() - cache.timestamp < timeout) {
@@ -41,29 +62,27 @@ export function defineGetTitles(
   };
 }
 
+export function defineGetTitles(
+  context: Context,
+  settings: Settings
+): GetTitles {
+  return async (project: string) => {
+    const getTitles = _defineGetTitles(context, settings);
+    return getTitles(project).then((titles) =>
+      titles.map((title) => title.title)
+    );
+  };
+}
+
 export function defineGetLines(context: Context, settings: Settings): GetLines {
   return async (project: string, title: string) => {
     const key = encodeFilename(`${project}-${title}`);
     const cache = defineReadCache<string[]>(
       context.currentPluginMetadata.pluginCacheDirectoryPath
     )(key);
-    const writeCache = defineWriteCache<string[]>(
-      context.currentPluginMetadata.pluginCacheDirectoryPath
-    );
-    const getAndWriteCache = async () => {
-      const lines = await scrapboxApi
-        .pageText(project, title, settings.sid)
-        .then((response) => response);
-      writeCache(key, lines);
-      return lines;
-    };
     if (cache !== undefined) {
-      if (Date.now() - cache.timestamp < timeout) {
-        return cache.data;
-      } else {
-        return getAndWriteCache();
-      }
+      return cache.data;
     }
-    return getAndWriteCache();
+    return [];
   };
 }
