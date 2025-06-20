@@ -1,4 +1,6 @@
 import * as rpc from "vscode-jsonrpc/node.js";
+import { getAllHelp } from "./domain/getAllHelp.js";
+import { defineGetLines, defineGetTitles } from "./plugins/impl.js";
 import { makeResult } from "./plugins/makeResult.js";
 
 const connection = rpc.createMessageConnection(
@@ -14,9 +16,14 @@ connection.onRequest("initialize", async (ctx: Context) => {
 });
 
 connection.onRequest("query", async (query: Query, settings: Settings) => {
-  return {
-    result: await makeResult(context, settings),
-  };
+  const projects = settings.projects.split(",");
+  const getTitles = defineGetTitles(context, settings);
+  const getLines = defineGetLines(context, settings);
+  const glossary = new Map<string, string>();
+  const allHelp = await getAllHelp(projects, getTitles, getLines, glossary);
+  const result = await makeResult(allHelp);
+
+  return { result };
 });
 
 connection.onRequest("open_url", async (params) => {
