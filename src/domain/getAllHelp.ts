@@ -14,7 +14,8 @@ export type SearchHelpResult = {
 export function getAllHelp(
   projects: string[],
   getTitles: GetTitles,
-  getLines: GetLines
+  getLines: GetLines,
+  glossary: Glossary
 ) {
   return Promise.all(
     projects.map(async (project) => {

@@ -3,30 +3,35 @@ type Settings = {
   projects: string[];
 };
 
-type ScrapboxHelp = {
+type BaseHelp = {
+  type: string;
+  helpfeel: string;
+};
+
+type ScrapboxHelp = BaseHelp & {
   type: "scrapbox";
   project: string;
   title: string;
 };
 
-type WebHelp = {
+type WebHelp = BaseHelp & {
   type: "web";
   url: string;
 };
 
-type TextHelp = {
+type TextHelp = BaseHelp & {
   type: "text";
   text: string;
 };
 
-type FileHelp = {
+type FileHelp = BaseHelp & {
   type: "file";
   project: string;
   title: string;
   fileName: string;
 };
 
-type TableHelp = {
+type TableHelp = BaseHelp & {
   type: "table";
   project: string;
   title: string;

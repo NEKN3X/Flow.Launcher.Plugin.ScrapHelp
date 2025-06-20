@@ -19,21 +19,25 @@ test("extractHelp", () => {
     {
       type: "web",
       url: "https://example.com",
+      helpfeel: "webhelp",
     },
     {
       type: "file",
       project: "Project A",
       title: "Title A",
       fileName: "example.js",
+      helpfeel: "filehelp",
     },
     {
       type: "text",
       text: "This is a text help",
+      helpfeel: "texthelp",
     },
     {
       type: "scrapbox",
       project: "Project A",
       title: "Title A",
+      helpfeel: "scrapboxhelp",
     },
   ]);
 });
