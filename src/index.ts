@@ -29,7 +29,11 @@ connection.onRequest("query", async (query: Query, settings: Settings) => {
   const getLines = defineGetLines(_context, settings);
   const glossary = extractGlossary(await getLines(projects[0], "Glossary"));
   const allHelp = await getAllHelp(projects, getTitles, getLines);
-  const result = await makeResult(allHelp, glossary);
+  const result = await makeResult(
+    allHelp,
+    glossary,
+    query.searchTerms.slice(1).join(" ")
+  );
 
   return { result: searchResult(result, query.search) };
 });

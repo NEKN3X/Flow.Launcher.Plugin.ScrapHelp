@@ -21,7 +21,15 @@ const openScrapboxPageContext = (url: URL): ResultItem => ({
   },
 });
 
-export async function makeResult(help: SearchHelpResult, glossary: Glossary) {
+const replaceQuery = (text: string, query: string): string => {
+  return text.replace(/{query}/g, query);
+};
+
+export async function makeResult(
+  help: SearchHelpResult,
+  glossary: Glossary,
+  query: string
+) {
   return help.flatMap((item) => {
     return item.pages.flatMap((page): ResultItem[] => {
       return [
@@ -64,10 +72,10 @@ export async function makeResult(help: SearchHelpResult, glossary: Glossary) {
                   },
                 ];
               case "web":
-                const url = new URL(x.url);
+                const url = new URL(replaceQuery(x.url, query));
                 return [
                   {
-                    title: x.helpfeel,
+                    title: replaceQuery(x.helpfeel, query),
                     subTitle: `/${url.hostname}${url.pathname}`,
                     icoPath: "assets/globe.png",
                     jsonRPCAction: {
