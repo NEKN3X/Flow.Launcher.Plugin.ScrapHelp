@@ -1,2 +1,7 @@
 [tools]
-pnpm = "latest"
+  deno = "latest"
+node = "latest"
+  pnpm = "latest"
+
+[tasks.build]
+  run = "pnpm install && pnpm run build"
