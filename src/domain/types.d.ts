@@ -1,8 +1,3 @@
-type Settings = {
-  sid: string;
-  projects: string[];
-};
-
 type BaseHelp = {
   type: string;
   helpfeel: string;

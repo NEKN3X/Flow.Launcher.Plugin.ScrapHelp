@@ -1,24 +1,36 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
-export type WriteCache = <T>(key: string, value: T) => void;
-export type ReadCache = <T>(key: string) => T | undefined;
+type CacheData<T> = {
+  data: T;
+  timestamp: number;
+};
 
-export function writeCache(cachePath: string): WriteCache {
-  return <T>(key: string, value: T) => {
+export type WriteCache<T> = (key: string, value: T) => void;
+export type ReadCache<T> = (key: string) => CacheData<T> | undefined;
+
+export function defineWriteCache<T>(cachePath: string): WriteCache<T> {
+  return (key: string, value: T) => {
     mkdirSync(cachePath, { recursive: true });
     writeFileSync(
       `${cachePath}/${key}.json`,
-      JSON.stringify(value, null, 2),
+      JSON.stringify(
+        {
+          data: value,
+          timestamp: Date.now(),
+        },
+        null,
+        2
+      ),
       "utf-8"
     );
   };
 }
 
-export function readCache(cachePath: string): ReadCache {
-  return <T>(key: string): T | undefined => {
+export function defineReadCache<T>(cachePath: string): ReadCache<T> {
+  return (key: string): CacheData<T> | undefined => {
     try {
       const data = readFileSync(`${cachePath}/${key}.json`, "utf-8");
-      return JSON.parse(data) as T;
+      return JSON.parse(data);
     } catch (_) {
       return undefined;
     }
