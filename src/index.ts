@@ -1,12 +1,15 @@
 import * as rpc from "vscode-jsonrpc/node.js";
-import { Query, Settings } from "./types.js";
+import { Context, Query, Settings } from "./types.js";
 
 const connection = rpc.createMessageConnection(
   new rpc.StreamMessageReader(process.stdin),
   new rpc.StreamMessageWriter(process.stdout)
 );
 
-connection.onRequest("initialize", async (params) => {
+let context: Context;
+
+connection.onRequest("initialize", async (ctx: Context) => {
+  context = ctx;
   return;
 });
 
