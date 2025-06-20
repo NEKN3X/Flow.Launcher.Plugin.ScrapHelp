@@ -20,8 +20,7 @@ export function replaceGlossary(text: string, glossary: Glossary) {
 export function getAllHelp(
   projects: string[],
   getTitles: GetTitles,
-  getLines: GetLines,
-  glossary: Glossary
+  getLines: GetLines
 ) {
   return Promise.all(
     projects.map(async (project) => {
@@ -32,10 +31,7 @@ export function getAllHelp(
           const help = extractHelp(project, title, lines);
           return {
             title,
-            help: help.map((h) => ({
-              ...h,
-              helpfeel: replaceGlossary(h.helpfeel, glossary),
-            })),
+            help,
           };
         })
       );

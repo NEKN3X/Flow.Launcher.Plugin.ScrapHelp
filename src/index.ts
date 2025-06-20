@@ -22,8 +22,8 @@ connection.onRequest("query", async (query: Query, settings: Settings) => {
   const getTitles = defineGetTitles(context, settings);
   const getLines = defineGetLines(context, settings);
   const glossary = extractGlossary(await getLines(projects[0], "Glossary"));
-  const allHelp = await getAllHelp(projects, getTitles, getLines, glossary);
-  const result = await makeResult(allHelp);
+  const allHelp = await getAllHelp(projects, getTitles, getLines);
+  const result = await makeResult(allHelp, glossary);
 
   return { result: searchResult(result, query.search) };
 });

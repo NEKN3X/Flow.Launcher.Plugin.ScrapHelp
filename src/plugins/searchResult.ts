@@ -3,7 +3,7 @@ import { Fzf, FzfOptions, FzfResultItem } from "fzf";
 export function searchResult(data: ResultItem[], query: string): ResultItem[] {
   const options: FzfOptions = {
     selector: (item: ResultItem) =>
-      `${item.subTitle} ${item.title} ${item.subTitle} ${item.title}`,
+      `${item.title} ${item.subTitle} ${item.title} ${item.subTitle}`,
   };
   const fzf = new Fzf<ResultItem[]>(data, options);
 
