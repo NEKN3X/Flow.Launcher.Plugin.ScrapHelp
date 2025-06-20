@@ -1,15 +1,66 @@
+const helpfeel = /\s*\?\s+(.*)$/;
+const urlHelpRegex = /\s*(\%|\$)\s+(https?.+)$/;
+const fileHelpRegex = /\s*(\%|\$)\s+(.+\.(.+))$/;
+const textHelpRegex = /\s*(\%|\$)\s+(.+)$/;
+
+function makeWebHelp(line: string): WebHelp | null {
+  const match = line.match(urlHelpRegex);
+  if (!match) return null;
+  return {
+    type: "web",
+    url: match[2],
+  };
+}
+
+function makeFileHelp(
+  project: string,
+  title: string,
+  line: string
+): FileHelp | null {
+  const match = line.match(fileHelpRegex);
+  if (!match) return null;
+  return {
+    type: "file",
+    project: project,
+    title: title,
+    fileName: match[2],
+  };
+}
+
+function makeTextHelp(line: string): TextHelp | null {
+  const match = line.match(textHelpRegex);
+  if (!match) return null;
+  return {
+    type: "text",
+    text: match[2],
+  };
+}
+
 export function makeHelp(
   project: string,
   title: string,
   lines: string[]
 ): Help[] {
-  return lines.map((line, index) => {
+  return lines.reduce((acc, line, index) => {
+    if (!helpfeel.test(line)) return acc;
     const nextLine = lines[index + 1] || "";
 
-    return {
-      type: "scrapbox",
-      project: project,
-      title: title,
-    };
-  });
+    const webHelp = makeWebHelp(nextLine);
+    if (webHelp) return [...acc, webHelp];
+
+    const fileHelp = makeFileHelp(project, title, nextLine);
+    if (fileHelp) return [...acc, fileHelp];
+
+    const textHelp = makeTextHelp(nextLine);
+    if (textHelp) return [...acc, textHelp];
+
+    return [
+      ...acc,
+      {
+        type: "scrapbox",
+        project: project,
+        title: title,
+      },
+    ];
+  }, [] as Help[]);
 }

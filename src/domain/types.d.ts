@@ -14,9 +14,9 @@ type WebHelp = {
   url: string;
 };
 
-type CommandHelp = {
-  type: "command";
-  command: string;
+type TextHelp = {
+  type: "text";
+  text: string;
 };
 
 type FileHelp = {
@@ -33,4 +33,4 @@ type TableHelp = {
   tableName: string;
 };
 
-type Help = ScrapboxHelp | WebHelp | CommandHelp | FileHelp | TableHelp;
+type Help = ScrapboxHelp | WebHelp | TextHelp | FileHelp | TableHelp;
