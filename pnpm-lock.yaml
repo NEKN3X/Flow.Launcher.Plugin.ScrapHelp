@@ -11,9 +11,6 @@ importers:
       fzf:
         specifier: ^0.5.2
         version: 0.5.2
-      ts-monadic-parser:
-        specifier: ^1.0.2
-        version: 1.0.2
       vscode-jsonrpc:
         specifier: ^8.2.1
         version: 8.2.1
@@ -1360,9 +1357,6 @@ packages:
         optional: true
       jest-util:
         optional: true
-
-  ts-monadic-parser@1.0.2:
-    resolution: {integrity: sha512-BmYUQNnJTHBo0R7V4qzEiSj1CYLSmEcVx2yPVqbUzoy1XcZTLGOitkBq3mpvjW80Tz1Cdg2A9MAhqppEpSpBUA==}
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
@@ -3037,8 +3031,6 @@ snapshots:
       '@jest/types': 30.0.1
       babel-jest: 30.0.2(@babel/core@7.27.4)
       jest-util: 30.0.2
-
-  ts-monadic-parser@1.0.2: {}
 
   tslib@2.8.1:
     optional: true
