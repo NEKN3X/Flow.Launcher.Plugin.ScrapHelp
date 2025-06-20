@@ -51,4 +51,18 @@ connection.onRequest("copy_file", async (params) => {
   return {};
 });
 
+connection.onRequest("context_menu", (contextData) => {
+  return {
+    result: [
+      {
+        title: contextData[0],
+        jsonRPCAction: {
+          method: contextData[1],
+          parameters: [...contextData.slice(2)],
+        },
+      } as ResultItem,
+    ],
+  };
+});
+
 connection.listen();
