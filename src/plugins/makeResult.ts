@@ -90,14 +90,15 @@ export async function makeResult(
                   },
                 ];
               case "text":
+                const text = replaceQuery(x.text, query);
                 return [
                   {
-                    title: x.helpfeel,
-                    subTitle: x.text,
+                    title: replaceQuery(x.helpfeel, query),
+                    subTitle: text,
                     icoPath: "assets/clipboard.png",
                     jsonRPCAction: {
                       method: "copy_text",
-                      parameters: [x.text],
+                      parameters: [text],
                     },
                     contextData: [
                       openScrapboxPageContext(
