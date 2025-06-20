@@ -1,20 +1,17 @@
 const apiBaseUrl = "https://scrapbox.io/api";
 
-function fetchScrapboxApi(endpoint: string, sid?: string) {
+async function fetchScrapboxApi(endpoint: string, sid?: string) {
   const url = `${apiBaseUrl}${endpoint}`;
-  return fetch(url, {
+  const response = await fetch(url, {
     headers: {
       "Content-Type": "application/json",
       ...(sid ? { Cookie: `connect.sid=${sid}` } : {}),
     },
-  }).then((response) => {
-    if (!response.ok) {
-      throw new Error(
-        `HTTP error! ${response.status} - ${response.statusText}`
-      );
-    }
-    return response.json();
   });
+  if (!response.ok) {
+    throw new Error(`HTTP error! ${response.status} - ${response.statusText}`);
+  }
+  return await response.json();
 }
 
 export default {
