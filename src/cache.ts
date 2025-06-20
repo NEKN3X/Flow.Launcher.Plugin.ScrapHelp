@@ -1,5 +1,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
-import { ReadCache, WriteCache } from "./domain/cache.js";
+
+export type WriteCache = <T>(key: string, value: T) => void;
+export type ReadCache = <T>(key: string) => T | undefined;
 
 export function writeCache(cachePath: string): WriteCache {
   return <T>(key: string, value: T) => {
