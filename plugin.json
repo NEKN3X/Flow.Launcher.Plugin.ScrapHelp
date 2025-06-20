@@ -8,5 +8,5 @@
   "Language": "javascript_v2",
   "Website": "https://github.com/NEKN3X/Flow.Launcher.Plugin.ScrapHelp",
   "ExecuteFileName": "dist/index.js",
-  "IcoPath": "Images\\app.png"
+  "IcoPath": "assets\\cosense.png"
 }
