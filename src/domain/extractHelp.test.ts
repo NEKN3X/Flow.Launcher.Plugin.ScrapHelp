@@ -1,6 +1,6 @@
-import { makeHelp } from "./makeHelp.js";
+import { extractHelp } from "./extractHelp.js";
 
-test("makeHelp", () => {
+test("extractHelp", () => {
   const lines = [
     "Title A",
     "? webhelp",
@@ -13,7 +13,7 @@ test("makeHelp", () => {
     "example",
   ];
 
-  const result = makeHelp("Project A", "Title A", lines);
+  const result = extractHelp("Project A", "Title A", lines);
 
   expect(result).toEqual([
     {

@@ -1,6 +1,6 @@
 const glossaryRegex = /\s*(.*)\:\s*\`(.*)\`$/;
 
-export function makeGlossary(lines: string[]): Glossary {
+export function extractGlossary(lines: string[]): Glossary {
   return new Map(
     lines.flatMap((x) => {
       const match = x.match(glossaryRegex);

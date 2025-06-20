@@ -36,7 +36,7 @@ function makeTextHelp(line: string): TextHelp | null {
   };
 }
 
-export function makeHelp(
+export function extractHelp(
   project: string,
   title: string,
   lines: string[]

@@ -1,6 +1,6 @@
-import { makeGlossary } from "./makeGlossary.js";
+import { extractGlossary } from "./extractGlossary.js";
 
-test("makeGlossary", () => {
+test("extractGlossary", () => {
   const lines = [
     "term1: `definition1`",
     "term2: `definition2`",
@@ -13,5 +13,5 @@ test("makeGlossary", () => {
     ["term3", "definition3"],
   ]);
 
-  expect(makeGlossary(lines)).toEqual(expected);
+  expect(extractGlossary(lines)).toEqual(expected);
 });
