@@ -37,6 +37,19 @@ export async function makeResult(help: SearchHelpResult, glossary: Glossary) {
                     },
                   },
                 ];
+              case "web":
+                const url = new URL(x.url);
+                return [
+                  {
+                    title: x.helpfeel,
+                    subTitle: `/${url.hostname}${url.pathname}`,
+                    icoPath: "assets/globe.png",
+                    jsonRPCAction: {
+                      method: "open_url",
+                      parameters: [url],
+                    },
+                  },
+                ];
               default:
                 return [];
             }
