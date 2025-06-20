@@ -1,6 +1,5 @@
 [tools]
-  deno = "latest"
-node = "latest"
+  node = "latest"
   pnpm = "latest"
 
 [tasks.build]
