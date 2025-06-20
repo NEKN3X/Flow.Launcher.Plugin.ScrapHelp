@@ -1,5 +1,4 @@
 import * as rpc from "vscode-jsonrpc/node.js";
-import scrapboxApi from "./scrapbox/scrapboxApi.js";
 
 const connection = rpc.createMessageConnection(
   new rpc.StreamMessageReader(process.stdin),
@@ -17,7 +16,6 @@ connection.onRequest("query", async (query: Query, settings: Settings) => {
   const projects = settings.projects
     .split(",")
     .map((project) => project.trim());
-  const titles = await scrapboxApi.searchTitles(projects[0], settings.sid);
 
   return {
     result: [

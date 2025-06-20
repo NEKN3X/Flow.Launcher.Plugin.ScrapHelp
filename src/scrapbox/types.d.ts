@@ -5,3 +5,5 @@ type SearchTitlesResponse = {
   image?: string;
   updated: number;
 }[];
+
+type PageTextResponse = string;
