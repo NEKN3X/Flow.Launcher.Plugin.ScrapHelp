@@ -1,4 +1,5 @@
 import * as rpc from "vscode-jsonrpc/node.js";
+import { Query, Settings } from "./types.js";
 
 const connection = rpc.createMessageConnection(
   new rpc.StreamMessageReader(process.stdin),
@@ -9,18 +10,15 @@ connection.onRequest("initialize", async (params) => {
   return;
 });
 
-connection.onRequest("query", async (query, settings) => {
+connection.onRequest("query", async (query: Query, settings: Settings) => {
   return {
     result: [
       {
-        title: query["search"],
-        subtitle: "Search result for: " + query["search"],
+        title: "aa" + query.search,
+        subtitle: "Search result for: ",
         jsonRPCAction: {
           method: "open_url",
-          parameters: [
-            "https://www.google.com/search?q=" +
-              encodeURIComponent(query["search"]),
-          ],
+          parameters: [],
         },
       },
     ],
