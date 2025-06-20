@@ -86,3 +86,33 @@ export function defineGetLines(context: Context, settings: Settings): GetLines {
     return [];
   };
 }
+
+export function defineGetFile(context: Context, settings: Settings): GetFile {
+  return async (project: string, title: string, fileName: string) => {
+    const key = encodeFilename(`${project}-${title}-${fileName}`);
+    const cache = defineReadCache<string>(
+      context.currentPluginMetadata.pluginCacheDirectoryPath
+    )(key);
+    const getAndWriteCache = async () => {
+      const res = await scrapboxApi.fileContent(
+        project,
+        title,
+        fileName,
+        settings.sid
+      );
+      const writeCache = defineWriteCache<string>(
+        context.currentPluginMetadata.pluginCacheDirectoryPath
+      );
+      writeCache(key, res);
+      return res;
+    };
+    if (cache !== undefined) {
+      if (Date.now() - cache.timestamp < timeout) {
+        return cache.data;
+      } else {
+        return await getAndWriteCache();
+      }
+    }
+    return await getAndWriteCache();
+  };
+}

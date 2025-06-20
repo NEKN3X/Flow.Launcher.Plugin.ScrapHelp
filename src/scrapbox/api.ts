@@ -26,4 +26,17 @@ export const scrapboxApi = {
       .then(async (response) => (await response.text()) as PageTextResponse)
       .then((text) => text.split("\n"));
   },
+  fileContent: async (
+    project: string,
+    title: string,
+    fileName: string,
+    sid?: string
+  ) => {
+    const endpoint = `/code/${project}/${encodeURIComponent(
+      title
+    )}/${fileName}`;
+    return fetchScrapboxApi(endpoint, sid).then(
+      async (response) => (await response.text()) as FileContentResponse
+    );
+  },
 };

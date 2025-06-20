@@ -6,3 +6,5 @@ type SearchTitlesResponse = {
 }[];
 
 type PageTextResponse = string;
+
+type FileContentResponse = string;

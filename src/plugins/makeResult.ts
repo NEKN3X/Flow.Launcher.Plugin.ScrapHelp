@@ -50,6 +50,30 @@ export async function makeResult(help: SearchHelpResult, glossary: Glossary) {
                     },
                   },
                 ];
+              case "text":
+                return [
+                  {
+                    title: x.helpfeel,
+                    subTitle: x.text,
+                    icoPath: "assets/clipboard.png",
+                    jsonRPCAction: {
+                      method: "copy_text",
+                      parameters: [x.text],
+                    },
+                  },
+                ];
+              case "file":
+                return [
+                  {
+                    title: x.helpfeel,
+                    subTitle: `/${item.project}/${page.title}/${x.fileName}`,
+                    icoPath: "assets/file-code.png",
+                    jsonRPCAction: {
+                      method: "copy_file",
+                      parameters: [item.project, page.title, x.fileName],
+                    },
+                  },
+                ];
               default:
                 return [];
             }

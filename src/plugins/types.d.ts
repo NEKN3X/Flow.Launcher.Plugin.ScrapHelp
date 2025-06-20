@@ -11,3 +11,9 @@ type ResultItem = {
     parameters: any[];
   };
 };
+
+type GetFile = (
+  project: string,
+  title: string,
+  fileName: string
+) => Promise<string>;
