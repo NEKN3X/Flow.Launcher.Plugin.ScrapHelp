@@ -2,6 +2,7 @@ import * as rpc from "vscode-jsonrpc/node.js";
 import { getAllHelp } from "./domain/getAllHelp.js";
 import { defineGetLines, defineGetTitles } from "./plugins/impl.js";
 import { makeResult } from "./plugins/makeResult.js";
+import { searchResult } from "./plugins/searchResult.js";
 
 const connection = rpc.createMessageConnection(
   new rpc.StreamMessageReader(process.stdin),
@@ -23,7 +24,7 @@ connection.onRequest("query", async (query: Query, settings: Settings) => {
   const allHelp = await getAllHelp(projects, getTitles, getLines, glossary);
   const result = await makeResult(allHelp);
 
-  return { result };
+  return { result: searchResult(result, query.search) };
 });
 
 connection.onRequest("open_url", async (params) => {

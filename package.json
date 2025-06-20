@@ -18,6 +18,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "fzf": "^0.5.2",
     "vscode-jsonrpc": "^8.2.1"
   }
 }

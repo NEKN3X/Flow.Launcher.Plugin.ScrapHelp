@@ -1,6 +1,8 @@
 import { SearchHelpResult } from "../domain/getAllHelp.js";
 
-export async function makeResult(help: SearchHelpResult) {
+export async function makeResult(
+  help: SearchHelpResult
+): Promise<ResultItem[]> {
   return help.flatMap((item) => {
     return item.pages.flatMap((page) => {
       return {

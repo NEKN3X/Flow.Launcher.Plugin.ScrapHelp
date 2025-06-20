@@ -13,6 +13,7 @@ async function fetchScrapboxApi(endpoint: string, sid?: string) {
 }
 
 export const scrapboxApi = {
+  // 1000件まで取得できるらしい
   searchTitles: async (project: string, sid?: string) => {
     const endpoint = `/pages/${project}/search/titles`;
     return fetchScrapboxApi(endpoint, sid).then(
