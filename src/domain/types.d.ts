@@ -34,3 +34,5 @@ type TableHelp = {
 };
 
 type Help = ScrapboxHelp | WebHelp | TextHelp | FileHelp | TableHelp;
+
+type Glossary = Map<string, string>;
