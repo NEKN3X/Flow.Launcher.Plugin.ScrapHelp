@@ -1,4 +1,5 @@
 import * as rpc from "vscode-jsonrpc/node.js";
+import { extractGlossary } from "./domain/extractGlossary.js";
 import { getAllHelp } from "./domain/getAllHelp.js";
 import { defineGetLines, defineGetTitles } from "./plugins/impl.js";
 import { makeResult } from "./plugins/makeResult.js";
@@ -20,7 +21,7 @@ connection.onRequest("query", async (query: Query, settings: Settings) => {
   const projects = settings.projects.split(",");
   const getTitles = defineGetTitles(context, settings);
   const getLines = defineGetLines(context, settings);
-  const glossary = new Map<string, string>();
+  const glossary = extractGlossary(await getLines(projects[0], "Glossary"));
   const allHelp = await getAllHelp(projects, getTitles, getLines, glossary);
   const result = await makeResult(allHelp);
 
