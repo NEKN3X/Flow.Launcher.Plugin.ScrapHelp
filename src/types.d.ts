@@ -1,4 +1,4 @@
-export type Context = {
+type Context = {
   currentPluginMetadata: {
     id: string;
     name: string;
@@ -21,7 +21,7 @@ export type Context = {
   };
 };
 
-export type Query = {
+type Query = {
   rawQuery: string;
   isReQuery: boolean;
   isHomeQuery: boolean;
@@ -30,7 +30,7 @@ export type Query = {
   actionKeyword: string;
 };
 
-export type Settings = {
+type Settings = {
   sid: string;
   projects: string;
 };

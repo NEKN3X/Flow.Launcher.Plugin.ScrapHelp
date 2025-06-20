@@ -1,6 +1,5 @@
 import * as rpc from "vscode-jsonrpc/node.js";
 import scrapboxApi from "./scrapbox/scrapboxApi.js";
-import { Context, Query, Settings } from "./types.js";
 
 const connection = rpc.createMessageConnection(
   new rpc.StreamMessageReader(process.stdin),

@@ -17,6 +17,6 @@ async function fetchScrapboxApi<T>(endpoint: string, sid?: string) {
 export default {
   searchTitles: async (project: string, sid?: string) => {
     const endpoint = `/pages/${project}/search/titles`;
-    return fetchScrapboxApi(endpoint, sid);
+    return fetchScrapboxApi<SearchTitlesResponse>(endpoint, sid);
   },
 };
