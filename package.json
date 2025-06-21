@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "fzf": "^0.5.2",
-    "ts-monadic-parser": "^2.0.1",
+    "ts-monadic-parser": "^2.0.2",
     "vscode-jsonrpc": "^8.2.1"
   }
 }

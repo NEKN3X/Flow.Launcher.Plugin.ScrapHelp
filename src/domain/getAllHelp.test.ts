@@ -7,15 +7,7 @@ test("getAllHelp", async () => {
 
   const projects = ["Project1"];
 
-  const glossary = new Map<string, string>();
-  glossary.set("scrapbox", "(scrapbox|cosense)");
-
-  const result = await getAllHelp(
-    projects,
-    mockGetTitles,
-    mockGetLines,
-    glossary
-  );
+  const result = await getAllHelp(projects, mockGetTitles, mockGetLines);
   expect(result).toEqual([
     {
       project: "Project1",
@@ -26,7 +18,7 @@ test("getAllHelp", async () => {
             {
               type: "web",
               url: "https://example.com",
-              helpfeel: "webhelp(scrapbox|cosense)",
+              helpfeel: "webhelp{scrapbox}",
             },
           ],
         },
@@ -36,7 +28,7 @@ test("getAllHelp", async () => {
             {
               type: "web",
               url: "https://example.com",
-              helpfeel: "webhelp(scrapbox|cosense)",
+              helpfeel: "webhelp{scrapbox}",
             },
           ],
         },

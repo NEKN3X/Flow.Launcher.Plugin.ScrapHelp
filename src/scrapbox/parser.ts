@@ -7,7 +7,7 @@ import {
   sat,
   some,
   symbol,
-} from "../utils/parser.js";
+} from "ts-monadic-parser";
 
 const letter = sat((x) => /[^()|]/.test(x));
 const str: Parser<string[]> = bind(some(letter), (s) => pure([s.join("")]));
