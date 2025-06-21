@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.0.1",
+    "@types/node": "^24.0.3",
     "jest": "^30.0.2",
     "ts-jest": "^29.4.0",
     "ts-jest-resolver": "^2.0.1",
@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "fzf": "^0.5.2",
+    "ts-monadic-parser": "^2.0.1",
     "vscode-jsonrpc": "^8.2.1"
   }
 }
