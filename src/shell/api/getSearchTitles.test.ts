@@ -1,4 +1,4 @@
-import { getSearchTitles } from './searchTitles.js'
+import { getSearchTitles } from './getSearchTitles.js'
 
 it('getSearchTitles should return Error when invalid SID', async () => {
   const project = 'testProject'
