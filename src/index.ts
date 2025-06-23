@@ -10,7 +10,7 @@ const connection = rpc.createMessageConnection(
 
 // let context: Context
 
-connection.onRequest('initialize', async (_ctx) => {
+connection.onRequest('initialize', async (_ctx: Context) => {
   // context = _ctx
 })
 
