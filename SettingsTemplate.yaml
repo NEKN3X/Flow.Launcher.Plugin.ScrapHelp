@@ -3,10 +3,10 @@ body:
   - type: input
     attributes:
       name: sid
-      label: "connect.sid"
-      defaultValue: ""
+      label: connect.sid
+      defaultValue: ''
   - type: input
     attributes:
       name: projects
-      label: "projects"
-      defaultValue: ""
+      label: projects
+      defaultValue: ''

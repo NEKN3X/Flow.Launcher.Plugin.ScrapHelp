@@ -1,17 +1,15 @@
-import * as rpc from "vscode-jsonrpc/node.js";
+import process from 'node:process'
+import * as rpc from 'vscode-jsonrpc/node.js'
 
 const connection = rpc.createMessageConnection(
   new rpc.StreamMessageReader(process.stdin),
-  new rpc.StreamMessageWriter(process.stdout)
-);
+  new rpc.StreamMessageWriter(process.stdout),
+)
 
-connection.onRequest("initialize", async (ctx) => {
-  return;
-});
+connection.onRequest('initialize', async (_ctx) => {})
 
-connection.onRequest("query", async (query, settings) => {
+connection.onRequest('query', async (_query, _settings) => {
+  return { result: [] }
+})
 
-  return { result: [] };
-});
-
-connection.listen();
+connection.listen()
