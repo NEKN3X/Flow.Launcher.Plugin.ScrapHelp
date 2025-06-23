@@ -15,7 +15,9 @@
     "jest": "^30.0.2",
     "ts-jest": "^29.4.0",
     "ts-jest-resolver": "^2.0.1",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "@antfu/eslint-config": "^4.16.1",
+    "eslint": "^9.29.0"
   },
   "dependencies": {
     "fzf": "^0.5.2",
