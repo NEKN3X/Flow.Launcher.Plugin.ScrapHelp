@@ -4,3 +4,8 @@ export type SearchTitlesResponse = {
   image?: string
   updated: number
 }[]
+
+export interface ScrapboxApiError {
+  name: string
+  message: string
+}

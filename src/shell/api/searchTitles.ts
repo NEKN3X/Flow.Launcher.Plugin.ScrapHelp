@@ -1,5 +1,5 @@
 import type { ConnectSid, ProjectName } from '../../core/scrapbox/types.js'
-import type { SearchTitlesResponse } from './types.js'
+import type { ScrapboxApiError, SearchTitlesResponse } from './types.js'
 import { ResultAsync } from 'neverthrow'
 import { client } from './client.js'
 
@@ -11,9 +11,6 @@ export function getSearchTitles(project: ProjectName, sid?: ConnectSid) {
   }).then((response) => {
     return response.data
   }), (error: any) => {
-    if (error.response) {
-      return new Error(`${error.response.data.name}: ${error.response.data.message}`)
-    }
-    return new Error('Unexpected error occurred while fetching titles')
+    return error.response as ScrapboxApiError
   })
 }
