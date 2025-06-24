@@ -1,4 +1,4 @@
-import type { Context, Query, Settings } from './types.js'
+import type { Context, Query } from './types.js'
 import process from 'node:process'
 import * as rpc from 'vscode-jsonrpc/node.js'
 import { getSearchTitles } from './shell/api/getSearchTitles.js'
@@ -14,8 +14,8 @@ connection.onRequest('initialize', async (_ctx: Context) => {
   // context = _ctx
 })
 
-connection.onRequest('query', async (_query: Query, settings: Settings) => {
-  const data = await getSearchTitles('nekn3x', settings.sid)
+connection.onRequest('query', async (_query: Query, _settings) => {
+  const data = await getSearchTitles('nekn3x')
   connection.sendRequest('ShowMsg', {
     title: `AAA${data.isOk()}`,
   })
