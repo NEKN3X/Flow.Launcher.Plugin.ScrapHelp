@@ -4,8 +4,7 @@ import { Fzf } from 'fzf'
 
 export function searchResult(data: ResultItem[], query: string): ResultItem[] {
   const options: FzfOptions = {
-    selector: (item: ResultItem) =>
-      `${item.title} ${item.subTitle} ${item.title} ${item.subTitle}`,
+    selector: (item: ResultItem) => item.title,
   }
   const fzf = new Fzf<ResultItem[]>(data, options)
   const result: FzfResultItem<ResultItem[]>[] = fzf.find(query)
@@ -15,7 +14,7 @@ export function searchResult(data: ResultItem[], query: string): ResultItem[] {
     .reduce((acc, item) => {
       if (acc.some(x => x.subTitle === item.subTitle && sameUrlAction(x, item)))
         return acc
-      return [...acc, item]
+      return [...acc, { ...item, score: item.score }]
     }, [] as ResultItem[])
 }
 

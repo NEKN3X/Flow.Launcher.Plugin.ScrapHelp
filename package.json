@@ -15,7 +15,6 @@
     "axios-cache-interceptor": "^1.8.0",
     "fzf": "^0.5.2",
     "neverthrow": "^8.2.0",
-    "rambda": "^10.2.0",
     "ts-monadic-parser": "^2.0.2",
     "vscode-jsonrpc": "^8.2.1"
   },

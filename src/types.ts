@@ -63,6 +63,7 @@ export type ResultItem = {
   icoPath?: string
   jsonRPCAction: JSONRPCActions
   contextData?: ResultItem[]
+  score?: number
 }
 
 export type JSONRPCActionHandler<T, U extends Array<unknown>, V> = {
