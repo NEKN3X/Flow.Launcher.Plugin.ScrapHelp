@@ -1,6 +1,6 @@
 import type { ConnectSid, ProjectName } from '../../core/scrapbox/types.js'
 import type { ScrapboxApiError, SearchTitlesResponse } from './types.js'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { ResultAsync } from 'neverthrow'
 import { client } from './client.js'
 
