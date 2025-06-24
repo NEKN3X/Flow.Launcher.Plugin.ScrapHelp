@@ -2,8 +2,13 @@
 {
   "compilerOptions": {
     "target": "es2016",
+    "baseUrl": "src",
     "module": "node16",
     "moduleResolution": "node16",
+    "paths": {
+      "@core/*": ["core/*"],
+      "@shell/*": ["shell/*"]
+    },
     "types": ["vitest/globals"],
     "strict": true,
     "outDir": "./dist",
