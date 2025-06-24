@@ -3,8 +3,8 @@ import type { Context, Methods, Query, ResultItem, Settings } from './types.js'
 import process from 'node:process'
 import { client } from '@shell/api/client.js'
 import { createGetScrapboxPages } from '@shell/api/getScrapboxPages.js'
+import { searchResult } from '@shell/searchResult.js'
 import { setupCache } from 'axios-cache-interceptor'
-import { searchResult } from 'searchResult.js'
 import * as rpc from 'vscode-jsonrpc/node.js'
 
 const connection = rpc.createMessageConnection(

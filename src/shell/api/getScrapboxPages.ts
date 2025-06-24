@@ -4,8 +4,8 @@ import type { AxiosInstance } from 'axios'
 import type { AxiosCacheInstance } from 'axios-cache-interceptor'
 import type { GetScrapboxPageResponse, ScrapboxApiError, SearchTitlesResponse, SearchTitlesResponseItem } from './types.js'
 import { extractHelp } from '@core/help/extractHelp.js'
+import { createReadLocalJSON, createWriteLocalJSON } from '@shell/storage.js'
 import { ResultAsync } from 'neverthrow'
-import { createReadLocalJSON, createWriteLocalJSON } from 'utils/storage.js'
 import { client } from './client.js'
 
 type SearchTitles = (project: ProjectName, sid?: ConnectSid) => ResultAsync<SearchTitlesResponse, ScrapboxApiError>
