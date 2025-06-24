@@ -36,3 +36,5 @@ export type Help = ScrapboePageHelp | WebPageHelp | TextHelp | FileHelp
 export type ScrapboxPageWithHelp = ScrapboxPage & {
   help: Help[]
 }
+
+export type Glossary = Map<string, string>
