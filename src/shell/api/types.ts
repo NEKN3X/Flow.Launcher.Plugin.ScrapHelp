@@ -5,7 +5,7 @@ export type SearchTitlesResponse = {
   updated: number
 }[]
 
-export interface ScrapboxApiError {
+export type ScrapboxApiError = {
   name: string
   message: string
 }
