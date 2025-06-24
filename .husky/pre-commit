@@ -1,4 +1,2 @@
 pnpm lint
 pnpm test
-
-exit 1
