@@ -33,6 +33,7 @@ export type Query = {
 export type Settings = {
   sid: string
   projects: string
+  glossary: string
 }
 
 export type JSONRPCAction = {

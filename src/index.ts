@@ -1,9 +1,13 @@
+import type { GetScrapboxPageResponse } from '@shell/api/types.js'
 import type { AxiosCacheInstance } from 'axios-cache-interceptor'
 import type { Context, Methods, Query, ResultItem, Settings } from './types.js'
 import process from 'node:process'
+import { expandHelpfeel } from '@core/help/parser.js'
 import { client } from '@shell/api/client.js'
 import { createGetScrapboxPages } from '@shell/api/getScrapboxPages.js'
+import { getGlossary } from '@shell/getGlossary.js'
 import { searchResult } from '@shell/searchResult.js'
+import { createReadLocalJSON } from '@shell/storage.js'
 import { setupCache } from 'axios-cache-interceptor'
 import * as rpc from 'vscode-jsonrpc/node.js'
 
@@ -28,6 +32,7 @@ const methods: Methods[] = [
     handler: async (query: Query, settings: Settings) => {
       const getScrapboxPages = createGetScrapboxPages(cacheClient, context.currentPluginMetadata.pluginCacheDirectoryPath)
       const projects = settings.projects.split(',')
+      const glossary = await getGlossary(context.currentPluginMetadata.pluginCacheDirectoryPath, settings.glossary)
       const result: ResultItem[] = (await Promise.all(
         projects.map(project => (
           getScrapboxPages(project, settings.sid).then(pages => pages.flatMap((page): ResultItem[] => ([
@@ -89,7 +94,10 @@ const methods: Methods[] = [
                 default:
                   return []
               }
-            }),
+            }).flatMap(help => (expandHelpfeel(help.title, glossary).map(expandedHelpfeel => ({
+              ...help,
+              title: expandedHelpfeel,
+            })))),
           ])),
           )),
         ),
