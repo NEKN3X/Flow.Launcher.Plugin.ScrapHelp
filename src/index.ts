@@ -14,7 +14,7 @@ connection.onRequest('initialize', async (_ctx: Context) => {
   // context = _ctx
 })
 
-connection.onRequest('query', async (_query: Query, settings) => {
+connection.onRequest('query', async (_query: Query, _settings) => {
   const data = await getSearchTitles('nekn3x')
   data.mapErr((e) => {
     connection.sendRequest('ShowMsg', {
