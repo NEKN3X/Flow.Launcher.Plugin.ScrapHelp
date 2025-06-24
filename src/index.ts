@@ -61,7 +61,7 @@ const methods: Methods[] = [
                       {
                         title: help.helpfeel,
                         subTitle: `${help.project}/${help.title}`,
-                        icoPath: 'assets/circlr-help.png',
+                        icoPath: 'assets/circle-help.png',
                         jsonRPCAction: {
                           method: 'open_url',
                           parameters: [new URL(`https://scrapbox.io/${help.project}/${help.title}`)],
