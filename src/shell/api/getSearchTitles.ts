@@ -1,5 +1,6 @@
 import type { ConnectSid, ProjectName } from '../../core/scrapbox/types.js'
 import type { ScrapboxApiError, SearchTitlesResponse } from './types.js'
+import axios, { AxiosError } from 'axios'
 import { ResultAsync } from 'neverthrow'
 import { client } from './client.js'
 
@@ -10,7 +11,9 @@ export function getSearchTitles(project: ProjectName, sid?: ConnectSid) {
     },
   }).then((response) => {
     return response.data
-  }), (error: any) => {
-    return error.response as ScrapboxApiError
+  }), (error) => {
+    if (axios.isAxiosError(error)) {
+      return error.response?.data as ScrapboxApiError
+    }
   })
 }

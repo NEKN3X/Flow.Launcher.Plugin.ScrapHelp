@@ -16,8 +16,10 @@ connection.onRequest('initialize', async (_ctx: Context) => {
 
 connection.onRequest('query', async (_query: Query, _settings) => {
   const data = await getSearchTitles('nekn3x')
-  connection.sendRequest('ShowMsg', {
-    title: `AAA${data.isOk()}`,
+  data.mapErr((e) => {
+    connection.sendRequest('ShowMsg', {
+      title: `Error: ${e}`,
+    })
   })
   return { result: [] }
 })
