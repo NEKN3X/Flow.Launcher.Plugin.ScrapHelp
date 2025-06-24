@@ -6,20 +6,24 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "build": "tsc --project tsconfig.build.json",
-    "test": "jest"
-  },
-  "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "@types/node": "^24.0.3",
-    "jest": "^30.0.2",
-    "ts-jest": "^29.4.0",
-    "ts-jest-resolver": "^2.0.1",
-    "typescript": "^5.8.3"
+    "build": "tsc --project tsconfig.build.json && tsc-alias",
+    "test": "vitest",
+    "lint": "eslint --fix"
   },
   "dependencies": {
+    "axios": "^1.10.0",
+    "axios-cache-interceptor": "^1.8.0",
     "fzf": "^0.5.2",
+    "neverthrow": "^8.2.0",
     "ts-monadic-parser": "^2.0.2",
     "vscode-jsonrpc": "^8.2.1"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.16.1",
+    "@types/node": "^24.0.3",
+    "eslint": "^9.29.0",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   }
 }

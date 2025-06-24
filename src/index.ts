@@ -1,64 +1,211 @@
-import * as rpc from "vscode-jsonrpc/node.js";
-import { extractGlossary } from "./domain/extractGlossary.js";
-import { getAllHelp } from "./domain/getAllHelp.js";
-import {
-  defineGetFile,
-  defineGetLines,
-  defineGetTitles,
-} from "./plugins/impl.js";
-import { makeResult } from "./plugins/makeResult.js";
-import { searchResult } from "./plugins/searchResult.js";
+import type { AxiosCacheInstance } from 'axios-cache-interceptor'
+import type { Context, Methods, Query, ResultItem, Settings } from './types.js'
+import process from 'node:process'
+import { extractGlossary } from '@core/help/extractGlossary.js'
+import { expandHelpfeel } from '@core/help/parser.js'
+import { client } from '@shell/api/client.js'
+import { createGetScrapboxFile } from '@shell/api/getScrapboxFile.js'
+import { createGetScrapboxPages } from '@shell/api/getScrapboxPages.js'
+import { searchResult } from '@shell/searchResult.js'
+import { setupCache } from 'axios-cache-interceptor'
+import * as rpc from 'vscode-jsonrpc/node.js'
 
 const connection = rpc.createMessageConnection(
   new rpc.StreamMessageReader(process.stdin),
-  new rpc.StreamMessageWriter(process.stdout)
-);
+  new rpc.StreamMessageWriter(process.stdout),
+)
 
-let _context: Context;
-let _settings: Settings;
+let context: Context
+let cacheClient: AxiosCacheInstance
 
-connection.onRequest("initialize", async (ctx: Context) => {
-  _context = ctx;
-  return;
-});
+const methods: Methods[] = [
+  {
+    method: 'initialize',
+    handler: async (ctx) => {
+      context = ctx
+      cacheClient = setupCache(client, {
+        ttl: 1000 * 60 * 0.5,
+      })
+    },
+  },
+  {
+    method: 'query',
+    handler: async (query: Query, settings: Settings) => {
+      const getScrapboxPages = createGetScrapboxPages(cacheClient, context.currentPluginMetadata.pluginCacheDirectoryPath)
+      const projects = settings.projects.split(',')
+      let glossary = new Map<string, string>([])
+      const result: ResultItem[] = (await Promise.all(
+        projects.map((project, index) => (
+          getScrapboxPages(project, settings.sid).then(async (pages) => {
+            if (index === 0) {
+              const glossaryPage = pages.find(page => page.title === 'Glossary')
+              if (glossaryPage) {
+                glossary = extractGlossary(glossaryPage.lines.map(line => line.text))
+                glossary.set('query', query.searchTerms[1] || '')
+              }
+            }
+            return pages.flatMap((page): ResultItem[] => ([
+              {
+                title: page.title,
+                subTitle: `${project}/${page.title}`,
+                icoPath: 'assets/sticky-note.png',
+                jsonRPCAction: {
+                  method: 'open_url',
+                  parameters: [new URL(`https://scrapbox.io/${project}/${encodeURIComponent(page.title)}`)],
+                },
+                contextData: [
+                  {
+                    title: 'Copy Scrapbox Link',
+                    icoPath: 'assets/clipboard.png',
+                    jsonRPCAction: {
+                      method: 'copy_text',
+                      parameters: [`[/${project}/${page.title}]`],
+                    },
+                  },
+                ],
+              },
+              ...page.help.flatMap((help): ResultItem[] => {
+                switch (help.type) {
+                  case 'scrapbox_page':
+                    return [
+                      {
+                        title: help.helpfeel,
+                        subTitle: `${help.project}/${help.title}`,
+                        icoPath: 'assets/circle-help.png',
+                        jsonRPCAction: {
+                          method: 'open_url',
+                          parameters: [new URL(`https://scrapbox.io/${help.project}/${help.title}`)],
+                        },
+                        contextData: [
+                          {
+                            title: 'Copy Scrapbox Link',
+                            icoPath: 'assets/clipboard.png',
+                            jsonRPCAction: {
+                              method: 'copy_text',
+                              parameters: [`[/${project}/${page.title}]`],
+                            },
+                          },
+                        ],
+                      },
+                    ]
+                  case 'web_page':
+                  { const url = new URL(decodeURIComponent(help.url).replace(/\{query\}/g, query.searchTerms[1] || ''))
+                    return [
+                      {
+                        title: help.helpfeel,
+                        subTitle: `${url.hostname}${url.pathname}`,
+                        icoPath: 'assets/globe.png',
+                        jsonRPCAction: {
+                          method: 'open_url',
+                          parameters: [url],
+                        },
+                        contextData: [
+                          {
+                            title: 'Open Scrapbox Page',
+                            icoPath: 'assets/sticky-note.png',
+                            jsonRPCAction: {
+                              method: 'open_url',
+                              parameters: [new URL(`https://scrapbox.io/${project}/${encodeURIComponent(page.title)}`)],
+                            },
+                          },
+                        ],
+                      },
+                    ] }
+                  case 'text':
+                    return [
+                      {
+                        title: help.helpfeel,
+                        subTitle: help.text,
+                        icoPath: 'assets/clipboard.png',
+                        jsonRPCAction: {
+                          method: 'copy_text',
+                          parameters: [help.text.replace(/\{query\}/g, query.searchTerms[1] || '')],
+                        },
+                        contextData: [
+                          {
+                            title: 'Open Scrapbox Page',
+                            icoPath: 'assets/clipboard.png',
+                            jsonRPCAction: {
+                              method: 'open_url',
+                              parameters: [new URL(`https://scrapbox.io/${project}/${encodeURIComponent(page.title)}`)],
+                            },
+                          },
+                        ],
+                      },
+                    ]
+                  case 'file':
+                    return [
+                      {
+                        title: help.helpfeel,
+                        subTitle: help.fileName,
+                        icoPath: 'assets/clipboard-minus.png',
+                        jsonRPCAction: {
+                          method: 'copy_file',
+                          parameters: [project, page.title, help.fileName, settings.sid],
+                        },
+                        contextData: [
+                          {
+                            title: 'Open Scrapbox Page',
+                            icoPath: 'assets/clipboard.png',
+                            jsonRPCAction: {
+                              method: 'open_url',
+                              parameters: [new URL(`https://scrapbox.io/${project}/${encodeURIComponent(page.title)}`)],
+                            },
+                          },
+                        ],
+                      },
+                    ]
+                  default:
+                    return []
+                }
+              }).flatMap(help => (expandHelpfeel(help.title, glossary).map(expandedHelpfeel => ({
+                ...help,
+                title: expandedHelpfeel,
+              })))),
+            ]))
+          },
+          )),
+        ),
+      )).flat()
 
-connection.onRequest("query", async (query: Query, settings: Settings) => {
-  _settings = settings;
-  const projects = settings.projects.split(",");
-  const getTitles = defineGetTitles(_context, settings);
-  const getLines = defineGetLines(_context, settings);
-  const glossary = extractGlossary(await getLines(projects[0], "Glossary"));
-  const allHelp = await getAllHelp(projects, getTitles, getLines);
-  const result = await makeResult(
-    allHelp,
-    glossary,
-    query.searchTerms.slice(1).join(" ")
-  );
+      return { result: searchResult(result, query.search) }
+    },
+  },
+  {
+    method: 'context_menu',
+    handler: async contextData => ({
+      result: contextData,
+    }),
+  },
+  {
+    method: 'open_url',
+    handler: async (params: [URL]) => {
+      await connection.sendRequest('OpenUrl', {
+        url: params[0].toString(),
+      })
+      return {}
+    },
+  },
+  {
+    method: 'copy_text',
+    handler: async (params: [string]) => {
+      await connection.sendRequest('CopyToClipboard', { text: params[0] })
+      return {}
+    },
+  },
+  {
+    method: 'copy_file',
+    handler: async (params: [string, string, string, string]) => {
+      const getScrapboxFile = createGetScrapboxFile(cacheClient)
+      const text = await getScrapboxFile(...params)
+      await connection.sendRequest('CopyToClipboard', { text })
+      return {}
+    },
+  },
+]
 
-  return { result: searchResult(result, query.search) };
-});
+methods.forEach(({ method, handler }) => {
+  connection.onRequest(method, (...args) => handler(...args))
+})
 
-connection.onRequest("open_url", async (params) => {
-  await connection.sendRequest("OpenUrl", { url: params[0] });
-  return {};
-});
-
-connection.onRequest("copy_text", async (params) => {
-  await connection.sendRequest("CopyToClipboard", { text: params[0] });
-  return {};
-});
-
-connection.onRequest("copy_file", async (params) => {
-  const getFile = defineGetFile(_context, _settings);
-  const text = await getFile(params[0], params[1], params[2]);
-  await connection.sendRequest("CopyToClipboard", { text });
-  return {};
-});
-
-connection.onRequest("context_menu", (contextData) => {
-  return {
-    result: contextData,
-  };
-});
-
-connection.listen();
+connection.listen()
