@@ -29,6 +29,7 @@ export type FileHelp = {
   project: string
   title: string
   fileName: string
+  text: string
 }
 
 export type Help = ScrapboePageHelp | WebPageHelp | TextHelp | FileHelp

@@ -29,12 +29,14 @@ export function extractHelp(
 
     const fileHelpMatch = nextLine.text.match(fileHelpRegex)
     if (fileHelpMatch) {
+      const text = ''
       return [...acc, {
         type: 'file',
         project,
         title: page.title,
         helpfeel: helpfeelMatch[1].trim(),
         fileName: fileHelpMatch[2].trim(),
+        text,
       }]
     }
 

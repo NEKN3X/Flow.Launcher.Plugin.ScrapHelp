@@ -4,6 +4,7 @@ import process from 'node:process'
 import { extractGlossary } from '@core/help/extractGlossary.js'
 import { expandHelpfeel } from '@core/help/parser.js'
 import { client } from '@shell/api/client.js'
+import { createGetScrapboxFile } from '@shell/api/getScrapboxFile.js'
 import { createGetScrapboxPages } from '@shell/api/getScrapboxPages.js'
 import { searchResult } from '@shell/searchResult.js'
 import { setupCache } from 'axios-cache-interceptor'
@@ -47,6 +48,7 @@ const methods: Methods[] = [
               {
                 title: page.title,
                 subTitle: `${project}/${page.title}`,
+                icoPath: 'assets/sticky-note.png',
                 jsonRPCAction: {
                   method: 'open_url',
                   parameters: [new URL(`https://scrapbox.io/${project}/${page.title}`)],
@@ -59,6 +61,7 @@ const methods: Methods[] = [
                       {
                         title: help.helpfeel,
                         subTitle: `${help.project}/${help.title}`,
+                        icoPath: 'assets/circlr-help.png',
                         jsonRPCAction: {
                           method: 'open_url',
                           parameters: [new URL(`https://scrapbox.io/${help.project}/${help.title}`)],
@@ -71,6 +74,7 @@ const methods: Methods[] = [
                       {
                         title: help.helpfeel,
                         subTitle: `${url.hostname}${url.pathname}`,
+                        icoPath: 'assets/globe.png',
                         jsonRPCAction: {
                           method: 'open_url',
                           parameters: [url],
@@ -82,6 +86,7 @@ const methods: Methods[] = [
                       {
                         title: help.helpfeel,
                         subTitle: help.text,
+                        icoPath: 'assets/clipboard.png',
                         jsonRPCAction: {
                           method: 'copy_text',
                           parameters: [help.text.replace(/\{query\}/g, query.searchTerms[1] || '')],
@@ -93,9 +98,10 @@ const methods: Methods[] = [
                       {
                         title: help.helpfeel,
                         subTitle: help.fileName,
+                        icoPath: 'assets/clipboard-minus.png',
                         jsonRPCAction: {
-                          method: 'copy_text',
-                          parameters: [help.fileName],
+                          method: 'copy_file',
+                          parameters: [project, page.title, help.fileName, settings.sid],
                         },
                       },
                     ]
@@ -133,9 +139,16 @@ const methods: Methods[] = [
   {
     method: 'copy_text',
     handler: async (params: [string]) => {
-      await connection.sendRequest('CopyToClipboard', {
-        text: params[0],
-      })
+      await connection.sendRequest('CopyToClipboard', { text: params[0] })
+      return {}
+    },
+  },
+  {
+    method: 'copy_file',
+    handler: async (params: [string, string, string, string]) => {
+      const getScrapboxFile = createGetScrapboxFile(cacheClient)
+      const text = await getScrapboxFile(...params)
+      await connection.sendRequest('CopyToClipboard', { text })
       return {}
     },
   },

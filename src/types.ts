@@ -51,7 +51,12 @@ export type CopyTextAction = JSONRPCAction & {
   parameters: [string]
 }
 
-export type JSONRPCActions = OpenURLAction | CopyTextAction
+export type CopyFileAction = JSONRPCAction & {
+  method: 'copy_file'
+  parameters: [string, string, string, string]
+}
+
+export type JSONRPCActions = OpenURLAction | CopyTextAction | CopyFileAction
 
 export type ResultItem = {
   title: string
@@ -78,6 +83,7 @@ export type ContextMenuHandler = JSONRPCActionHandler<'context_menu', [ResultIte
 export type CustomHandler<T extends JSONRPCAction> = JSONRPCActionHandler<T['method'], [T['parameters']], object>
 export type OpenURLHandler = CustomHandler<OpenURLAction>
 export type CopyTextHandler = CustomHandler<CopyTextAction>
+export type CopyFileHandler = CustomHandler<CopyFileAction>
 
 export type Methods
   = | InitializeHandler
@@ -85,3 +91,4 @@ export type Methods
     | ContextMenuHandler
     | OpenURLHandler
     | CopyTextHandler
+    | CopyFileHandler
