@@ -64,29 +64,22 @@ export type ResultItem = {
   contextData?: ResultItem[]
 }
 
-export type JSONRPCActionHandler = {
-  method: string
-  handler: (...args: any) => (Promise<any> | void)
+export type JSONRPCActionHandler<T, U extends Array<unknown>, V> = {
+  method: T
+  handler: (...args: U) => (Promise<V> | V)
 }
 
-export type InitializeHandler = JSONRPCActionHandler & {
-  method: 'initialize'
-  handler: (context: Context) => Promise<void>
-}
+export type InitializeHandler = JSONRPCActionHandler<'initialize', [Context], void>
+export type QueryHandler = JSONRPCActionHandler<'query', [Query, Settings], { result: ResultItem[] }>
+export type ContextMenuHandler = JSONRPCActionHandler<'context_menu', [ResultItem[]], { result: ResultItem[] }>
 
-export type QueryHandler = JSONRPCActionHandler & {
-  method: 'query'
-  handler: (query: Query, settings: Settings) => Promise<{ result: ResultItem[] }>
-}
-
-export type CustomHandler<T extends JSONRPCAction> = JSONRPCActionHandler & {
-  method: T['method']
-  handler: (params: T['parameters']) => Promise<object> | object
-}
-
+export type CustomHandler<T extends JSONRPCAction> = JSONRPCActionHandler<T['method'], [T['parameters']], object>
 export type OpenURLHandler = CustomHandler<OpenURLAction>
+export type CopyTextHandler = CustomHandler<CopyTextAction>
 
 export type Methods
   = | InitializeHandler
     | QueryHandler
+    | ContextMenuHandler
     | OpenURLHandler
+    | CopyTextHandler

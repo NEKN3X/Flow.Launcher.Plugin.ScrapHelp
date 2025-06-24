@@ -18,7 +18,7 @@ let cacheClient: AxiosCacheInstance
 const methods: Methods[] = [
   {
     method: 'initialize',
-    handler: async (ctx: Context) => {
+    handler: async (ctx) => {
       context = ctx
       cacheClient = setupCache(client)
     },
@@ -46,6 +46,12 @@ const methods: Methods[] = [
     },
   },
   {
+    method: 'context_menu',
+    handler: async contextData => ({
+      result: contextData,
+    }),
+  },
+  {
     method: 'open_url',
     handler: async (params: [URL]) => {
       await connection.sendRequest('OpenUrl', {
@@ -57,7 +63,7 @@ const methods: Methods[] = [
 ]
 
 methods.forEach(({ method, handler }) => {
-  connection.onRequest(method, handler)
+  connection.onRequest(method, (...args) => handler(...args))
 })
 
 connection.listen()
