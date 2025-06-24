@@ -51,7 +51,7 @@ const methods: Methods[] = [
                 icoPath: 'assets/sticky-note.png',
                 jsonRPCAction: {
                   method: 'open_url',
-                  parameters: [new URL(`https://scrapbox.io/${project}/${page.title}`)],
+                  parameters: [new URL(`https://scrapbox.io/${project}/${encodeURIComponent(page.title)}`)],
                 },
                 contextData: [
                   {
