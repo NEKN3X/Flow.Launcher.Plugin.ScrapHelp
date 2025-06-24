@@ -1,4 +1,3 @@
-import type { GetScrapboxPageResponse } from '@shell/api/types.js'
 import type { AxiosCacheInstance } from 'axios-cache-interceptor'
 import type { Context, Methods, Query, ResultItem, Settings } from './types.js'
 import process from 'node:process'
@@ -7,7 +6,6 @@ import { client } from '@shell/api/client.js'
 import { createGetScrapboxPages } from '@shell/api/getScrapboxPages.js'
 import { getGlossary } from '@shell/getGlossary.js'
 import { searchResult } from '@shell/searchResult.js'
-import { createReadLocalJSON } from '@shell/storage.js'
 import { setupCache } from 'axios-cache-interceptor'
 import * as rpc from 'vscode-jsonrpc/node.js'
 
