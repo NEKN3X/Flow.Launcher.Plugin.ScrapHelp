@@ -35,6 +35,23 @@ export type Settings = {
   projects: string
 }
 
+export type JSONRPCAction = {
+  method: string
+  parameters: any[]
+}
+
+export type OpenURLAction = JSONRPCAction & {
+  method: 'open_url'
+  parameters: [URL]
+}
+
+export type CopyTextAction = JSONRPCAction & {
+  method: 'copy_text'
+  parameters: [string]
+}
+
+export type JSONRPCActions = OpenURLAction | CopyTextAction
+
 export type ResultItem = {
   title: string
   subTitle?: string
@@ -43,9 +60,33 @@ export type ResultItem = {
     fontFamily: string
   }
   icoPath?: string
-  jsonRPCAction: {
-    method: string
-    parameters: any[]
-  }
+  jsonRPCAction: JSONRPCActions
   contextData?: ResultItem[]
 }
+
+export type JSONRPCActionHandler = {
+  method: string
+  handler: (...args: any) => (Promise<any> | void)
+}
+
+export type InitializeHandler = JSONRPCActionHandler & {
+  method: 'initialize'
+  handler: (context: Context) => Promise<void>
+}
+
+export type QueryHandler = JSONRPCActionHandler & {
+  method: 'query'
+  handler: (query: Query, settings: Settings) => Promise<{ result: ResultItem[] }>
+}
+
+export type CustomHandler<T extends JSONRPCAction> = JSONRPCActionHandler & {
+  method: T['method']
+  handler: (params: T['parameters']) => Promise<object> | object
+}
+
+export type OpenURLHandler = CustomHandler<OpenURLAction>
+
+export type Methods
+  = | InitializeHandler
+    | QueryHandler
+    | OpenURLHandler
