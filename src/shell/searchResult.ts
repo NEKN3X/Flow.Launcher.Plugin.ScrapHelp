@@ -6,8 +6,8 @@ export function searchResult(data: ResultItem[], query: string): ResultItem[] {
   const options: FzfOptions = {
     selector: (item: ResultItem) => item.title,
   }
-  const fzf = new Fzf<ResultItem[]>(data, options)
-  const result: FzfResultItem<ResultItem[]>[] = fzf.find(query)
+  const fzf = new Fzf(data, options)
+  const result: FzfResultItem[] = fzf.find(query)
 
   return result
     .map(x => x.item as ResultItem)
