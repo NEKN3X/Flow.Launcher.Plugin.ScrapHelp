@@ -22,7 +22,9 @@ const methods: Methods[] = [
     method: 'initialize',
     handler: async (ctx) => {
       context = ctx
-      cacheClient = setupCache(client)
+      cacheClient = setupCache(client, {
+        ttl: 1000 * 60 * 0.5,
+      })
     },
   },
   {
