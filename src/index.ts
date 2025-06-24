@@ -38,6 +38,7 @@ const methods: Methods[] = [
               const glossaryPage = pages.find(page => page.title === 'Glossary')
               if (glossaryPage) {
                 glossary = extractGlossary(glossaryPage.lines.map(line => line.text))
+                glossary.set('query', query.searchTerms[1] || '')
               }
             }
             return pages.flatMap((page): ResultItem[] => ([
@@ -63,7 +64,7 @@ const methods: Methods[] = [
                       },
                     ]
                   case 'web_page':
-                  { const url = new URL(help.url)
+                  { const url = new URL(decodeURIComponent(help.url).replace(/\{query\}/g, query.searchTerms[1] || ''))
                     return [
                       {
                         title: help.helpfeel,
@@ -81,7 +82,7 @@ const methods: Methods[] = [
                         subTitle: help.text,
                         jsonRPCAction: {
                           method: 'copy_text',
-                          parameters: [help.text],
+                          parameters: [help.text.replace(/\{query\}/g, query.searchTerms[1] || '')],
                         },
                       },
                     ]
