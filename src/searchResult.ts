@@ -26,6 +26,7 @@ function sameUrlAction(
   return (
     a.jsonRPCAction.method === 'open_url'
     && a.jsonRPCAction.method === b.jsonRPCAction.method
+    && a.icoPath === b.icoPath
     && a.jsonRPCAction.parameters[0] === b.jsonRPCAction.parameters[0]
   )
 }

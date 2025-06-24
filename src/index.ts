@@ -30,14 +30,67 @@ const methods: Methods[] = [
       const projects = settings.projects.split(',')
       const result: ResultItem[] = (await Promise.all(
         projects.map(project => (
-          getScrapboxPages(project, settings.sid).then(pages => pages.map((page): ResultItem => ({
-            title: page.title,
-            subTitle: project,
-            jsonRPCAction: {
-              method: 'open_url',
-              parameters: [new URL(`https://scrapbox.io/${project}/${page.title}`)],
+          getScrapboxPages(project, settings.sid).then(pages => pages.flatMap((page): ResultItem[] => ([
+            {
+              title: page.title,
+              subTitle: `${project}/${page.title}`,
+              jsonRPCAction: {
+                method: 'open_url',
+                parameters: [new URL(`https://scrapbox.io/${project}/${page.title}`)],
+              },
             },
-          })),
+            ...page.help.flatMap((help): ResultItem[] => {
+              switch (help.type) {
+                case 'scrapbox_page':
+                  return [
+                    {
+                      title: help.helpfeel,
+                      subTitle: `${help.project}/${help.title}`,
+                      jsonRPCAction: {
+                        method: 'open_url',
+                        parameters: [new URL(`https://scrapbox.io/${help.project}/${help.title}`)],
+                      },
+                    },
+                  ]
+                case 'web_page':
+                { const url = new URL(help.url)
+                  return [
+                    {
+                      title: help.helpfeel,
+                      subTitle: `${url.hostname}${url.pathname}`,
+                      jsonRPCAction: {
+                        method: 'open_url',
+                        parameters: [url],
+                      },
+                    },
+                  ] }
+                case 'text':
+                  return [
+                    {
+                      title: help.helpfeel,
+                      subTitle: help.text,
+                      jsonRPCAction: {
+                        method: 'copy_text',
+                        parameters: [help.text],
+                      },
+                    },
+                  ]
+                case 'file':
+                  return [
+                    {
+                      title: help.helpfeel,
+                      subTitle: help.fileName,
+                      jsonRPCAction: {
+                        method: 'copy_text',
+                        parameters: [help.fileName],
+                      },
+                    },
+                  ]
+                default:
+                  return []
+              }
+            }),
+          ])),
           )),
         ),
       )).flat()
@@ -56,6 +109,15 @@ const methods: Methods[] = [
     handler: async (params: [URL]) => {
       await connection.sendRequest('OpenUrl', {
         url: params[0].toString(),
+      })
+      return {}
+    },
+  },
+  {
+    method: 'copy_text',
+    handler: async (params: [string]) => {
+      await connection.sendRequest('CopyToClipboard', {
+        text: params[0],
       })
       return {}
     },
