@@ -53,6 +53,16 @@ const methods: Methods[] = [
                   method: 'open_url',
                   parameters: [new URL(`https://scrapbox.io/${project}/${page.title}`)],
                 },
+                contextData: [
+                  {
+                    title: 'Copy Scrapbox Link',
+                    icoPath: 'assets/clipboard.png',
+                    jsonRPCAction: {
+                      method: 'copy_text',
+                      parameters: [`[/${project}/${page.title}]`],
+                    },
+                  },
+                ],
               },
               ...page.help.flatMap((help): ResultItem[] => {
                 switch (help.type) {
@@ -66,6 +76,16 @@ const methods: Methods[] = [
                           method: 'open_url',
                           parameters: [new URL(`https://scrapbox.io/${help.project}/${help.title}`)],
                         },
+                        contextData: [
+                          {
+                            title: 'Copy Scrapbox Link',
+                            icoPath: 'assets/clipboard.png',
+                            jsonRPCAction: {
+                              method: 'copy_text',
+                              parameters: [`[/${project}/${page.title}]`],
+                            },
+                          },
+                        ],
                       },
                     ]
                   case 'web_page':
@@ -79,6 +99,16 @@ const methods: Methods[] = [
                           method: 'open_url',
                           parameters: [url],
                         },
+                        contextData: [
+                          {
+                            title: 'Open Scrapbox Page',
+                            icoPath: 'assets/sticky-note.png',
+                            jsonRPCAction: {
+                              method: 'open_url',
+                              parameters: [new URL(`https://scrapbox.io/${project}/${encodeURIComponent(page.title)}`)],
+                            },
+                          },
+                        ],
                       },
                     ] }
                   case 'text':
@@ -91,6 +121,16 @@ const methods: Methods[] = [
                           method: 'copy_text',
                           parameters: [help.text.replace(/\{query\}/g, query.searchTerms[1] || '')],
                         },
+                        contextData: [
+                          {
+                            title: 'Open Scrapbox Page',
+                            icoPath: 'assets/clipboard.png',
+                            jsonRPCAction: {
+                              method: 'open_url',
+                              parameters: [new URL(`https://scrapbox.io/${project}/${encodeURIComponent(page.title)}`)],
+                            },
+                          },
+                        ],
                       },
                     ]
                   case 'file':
@@ -103,6 +143,16 @@ const methods: Methods[] = [
                           method: 'copy_file',
                           parameters: [project, page.title, help.fileName, settings.sid],
                         },
+                        contextData: [
+                          {
+                            title: 'Open Scrapbox Page',
+                            icoPath: 'assets/clipboard.png',
+                            jsonRPCAction: {
+                              method: 'open_url',
+                              parameters: [new URL(`https://scrapbox.io/${project}/${encodeURIComponent(page.title)}`)],
+                            },
+                          },
+                        ],
                       },
                     ]
                   default:
