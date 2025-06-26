@@ -41,7 +41,7 @@ const methods: Methods[] = [
               const glossaryPage = pages.find(page => page.title === 'Glossary')
               if (glossaryPage) {
                 glossary = extractGlossary(glossaryPage.lines.map(line => line.text))
-                glossary.set('query', query.searchTerms[1] || '')
+                glossary.set('query', query.searchTerms.slice(1).join(' ') || '')
               }
             }
             return pages.flatMap((page): ResultItem[] => ([
@@ -89,11 +89,11 @@ const methods: Methods[] = [
                       },
                     ]
                   case 'web_page':
-                  { const url = new URL(decodeURIComponent(help.url).replace(/\{query\}/g, query.searchTerms[1] || ''))
+                  { const url = new URL(decodeURIComponent(help.url).replace(/\{query\}/g, query.searchTerms.slice(1).join(' ') || ''))
                     return [
                       {
                         title: help.helpfeel,
-                        subTitle: `${url.hostname}${url.pathname}`,
+                        subTitle: decodeURIComponent(`${url.hostname}${url.pathname}`),
                         icoPath: 'assets/globe.png',
                         jsonRPCAction: {
                           method: 'open_url',
@@ -119,7 +119,7 @@ const methods: Methods[] = [
                         icoPath: 'assets/clipboard.png',
                         jsonRPCAction: {
                           method: 'copy_text',
-                          parameters: [help.text.replace(/\{query\}/g, query.searchTerms[1] || '')],
+                          parameters: [help.text.replace(/\{query\}/g, query.searchTerms.slice(1).join(' ') || '')],
                         },
                         contextData: [
                           {
