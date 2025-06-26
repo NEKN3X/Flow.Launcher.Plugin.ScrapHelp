@@ -94,7 +94,7 @@ const methods: Methods[] = [
                     return [
                       {
                         title: help.helpfeel,
-                        subTitle: decodeURIComponent(`${url.hostname}${url.pathname}`),
+                        subTitle: decodeURIComponent(`${url.hostname.replace(/www\./, '')}${url.pathname}`),
                         icoPath: 'assets/globe.png',
                         jsonRPCAction: {
                           method: 'open_url',
