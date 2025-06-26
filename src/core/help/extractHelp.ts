@@ -2,9 +2,11 @@ import type { ScrapboxPage } from '@core/scrapbox/types.js'
 import type { Help } from './types.js'
 
 const helpfeel = /^\s*\?(.+)$/
-const webHelpRegex = /^\s*(%|\$)\s+(http.+)$/
+const webHelpRegex = /^\s*(%|\$)\s+(https?:\/\/.+)$/
 const fileHelpRegex = /^\s*(%|\$)(.+)$/
 const textHelpRegex = /^\s*(%|\$)(.+)$/
+const scrapboxLinkRegex = /\[(https?:\/\/\S+)\s+(\S.*)\]/
+const scrapboxLinkRegex2 = /\[(.*\S)\s+(https?:\/\/\S+)\]/
 
 export function extractHelp(
   project: string,
@@ -15,6 +17,27 @@ export function extractHelp(
     if (!helpfeelMatch)
       return acc
     const nextLine = page.lines[index + 1] || ''
+
+    const scrapboxLinkMatch = nextLine.text.match(scrapboxLinkRegex)
+    if (scrapboxLinkMatch) {
+      return [...acc, {
+        type: 'web_page',
+        project,
+        title: page.title,
+        helpfeel: helpfeelMatch[1].trim(),
+        url: scrapboxLinkMatch[1].trim(),
+      }]
+    }
+    const scrapboxLinkMatch2 = nextLine.text.match(scrapboxLinkRegex2)
+    if (scrapboxLinkMatch2) {
+      return [...acc, {
+        type: 'web_page',
+        project,
+        title: page.title,
+        helpfeel: helpfeelMatch[1].trim(),
+        url: scrapboxLinkMatch2[2].trim(),
+      }]
+    }
 
     const webHelpMatch = nextLine.text.match(webHelpRegex)
     if (webHelpMatch) {
