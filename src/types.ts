@@ -56,7 +56,12 @@ export type CopyFileAction = JSONRPCAction & {
   parameters: [string, string, string, string]
 }
 
-export type JSONRPCActions = OpenURLAction | CopyTextAction | CopyFileAction
+export type RemoveCacheAction = JSONRPCAction & {
+  method: 'remove_cache'
+  parameters: []
+}
+
+export type JSONRPCActions = OpenURLAction | CopyTextAction | CopyFileAction | RemoveCacheAction
 
 export type ResultItem = {
   title: string
@@ -84,6 +89,7 @@ export type CustomHandler<T extends JSONRPCAction> = JSONRPCActionHandler<T['met
 export type OpenURLHandler = CustomHandler<OpenURLAction>
 export type CopyTextHandler = CustomHandler<CopyTextAction>
 export type CopyFileHandler = CustomHandler<CopyFileAction>
+export type RemoveCacheHandler = CustomHandler<RemoveCacheAction>
 
 export type Methods
   = | InitializeHandler
@@ -92,3 +98,4 @@ export type Methods
     | OpenURLHandler
     | CopyTextHandler
     | CopyFileHandler
+    | RemoveCacheHandler

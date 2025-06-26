@@ -3,8 +3,8 @@ import type { Help } from './types.js'
 
 const helpfeel = /^\s*\?(.+)$/
 const webHelpRegex = /^\s*(%|\$)\s+(https?:\/\/.+)$/
-const fileHelpRegex = /^\s*(%|\$)(.+)$/
-const textHelpRegex = /^\s*(%|\$)(.+)$/
+const fileHelpRegex = /^\s*(%)(.+)$/
+const textHelpRegex = /^\s*(\$)(.+)$/
 const scrapboxLinkRegex = /\[(https?:\/\/\S+)\s+(\S.*)\]/
 const scrapboxLinkRegex2 = /\[(.*\S)\s+(https?:\/\/\S+)\]/
 

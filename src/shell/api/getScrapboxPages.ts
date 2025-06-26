@@ -4,7 +4,7 @@ import type { AxiosInstance } from 'axios'
 import type { AxiosCacheInstance } from 'axios-cache-interceptor'
 import type { GetScrapboxPageResponse, ScrapboxApiError, SearchTitlesResponse, SearchTitlesResponseItem } from './types.js'
 import { extractHelp } from '@core/help/extractHelp.js'
-import { createReadLocalJSON, createWriteLocalJSON } from '@shell/storage.js'
+import { createReadJSON, createWriteJSON } from '@shell/storage.js'
 import { ResultAsync } from 'neverthrow'
 import { client } from './client.js'
 
@@ -65,8 +65,8 @@ function mapToScrapboxPage(item: GetScrapboxPageResponse & { help?: Help[] }): S
 export function createGetScrapboxPages(cacheClient: AxiosCacheInstance, cachePath: string) {
   const searchTitles = createSearchTitles(cacheClient)
   const getScrapboxPage = createGetScrapboxPage(client)
-  const writeJSON = createWriteLocalJSON(cachePath)
-  const readJSON = createReadLocalJSON<GetScrapboxPageResponse & { help: Help[] }>(cachePath)
+  const writeJSON = createWriteJSON(cachePath)
+  const readJSON = createReadJSON<GetScrapboxPageResponse & { help: Help[] }>(cachePath)
   return async (project: ProjectName, sid?: ConnectSid): Promise<ScrapboxPageWithHelp[]> => {
     const titlesResult = await searchTitles(project, sid)
     if (titlesResult.isErr())

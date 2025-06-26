@@ -7,6 +7,7 @@ import { client } from '@shell/api/client.js'
 import { createGetScrapboxFile } from '@shell/api/getScrapboxFile.js'
 import { createGetScrapboxPages } from '@shell/api/getScrapboxPages.js'
 import { searchResult } from '@shell/searchResult.js'
+import { createRemoveDir } from '@shell/storage.js'
 import { setupCache } from 'axios-cache-interceptor'
 import * as rpc from 'vscode-jsonrpc/node.js'
 
@@ -174,7 +175,14 @@ const methods: Methods[] = [
   {
     method: 'context_menu',
     handler: async contextData => ({
-      result: contextData,
+      result: [...contextData, {
+        title: 'Remove Cache',
+        icoPath: 'assets/cosense.png',
+        jsonRPCAction: {
+          method: 'remove_cache',
+          parameters: [],
+        },
+      }],
     }),
   },
   {
@@ -189,7 +197,8 @@ const methods: Methods[] = [
   {
     method: 'copy_text',
     handler: async (params: [string]) => {
-      await connection.sendRequest('CopyToClipboard', { text: params[0] })
+      const text = params[0]
+      await connection.sendRequest('CopyToClipboard', { text })
       return {}
     },
   },
@@ -199,6 +208,14 @@ const methods: Methods[] = [
       const getScrapboxFile = createGetScrapboxFile(cacheClient)
       const text = await getScrapboxFile(...params)
       await connection.sendRequest('CopyToClipboard', { text })
+      return {}
+    },
+  },
+  {
+    method: 'remove_cache',
+    handler: async () => {
+      const removeCache = createRemoveDir(context.currentPluginMetadata.pluginCacheDirectoryPath)
+      await removeCache()
       return {}
     },
   },

@@ -1,8 +1,8 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { mkdir, readFile, rmdir, writeFile } from 'node:fs/promises'
 import { ResultAsync } from 'neverthrow'
 
 export type WriteJSON<T> = (key: string, value: T) => ResultAsync<void, unknown>
-export function createWriteLocalJSON<T>(cachePath: string): WriteJSON<T> {
+export function createWriteJSON<T>(cachePath: string): WriteJSON<T> {
   return (key: string, value: T) => {
     return ResultAsync.fromPromise(mkdir(cachePath, { recursive: true }).then(async () =>
       await writeFile(
@@ -21,10 +21,24 @@ export function createWriteLocalJSON<T>(cachePath: string): WriteJSON<T> {
 }
 
 export type ReadJSON<T> = (key: string) => ResultAsync<T, unknown>
-export function createReadLocalJSON<T>(cachePath: string): ReadJSON<T> {
+export function createReadJSON<T>(cachePath: string): ReadJSON<T> {
   return (key: string) => {
     return ResultAsync.fromPromise(
       readFile(`${cachePath}/${key}.json`, 'utf-8').then(x => JSON.parse(x) as T),
+      (error) => {
+        return error
+      },
+    )
+  }
+}
+
+export type RemoveDir = () => ResultAsync<void, unknown>
+export function createRemoveDir(cachePath: string): RemoveDir {
+  return () => {
+    return ResultAsync.fromPromise(
+      mkdir(cachePath, { recursive: true }).then(async () =>
+        await rmdir(`${cachePath}`, { recursive: true }),
+      ),
       (error) => {
         return error
       },
