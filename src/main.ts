@@ -31,7 +31,7 @@ flow.showResult(async (query, settings) => {
 flow.on('open_url', async (params) => {
   const url = params[0] as string
   const result = await flow.fuzzySearch('aa a', 'CC AA BBB A')
-  flow.showMessage(`Fuzzy search result: ${result.score}`)
+  flow.showMessage(`Fuzzy search result: ${result.success}`)
   // flow.openUrl(url, true)
 })
 

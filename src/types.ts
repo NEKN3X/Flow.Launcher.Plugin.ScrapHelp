@@ -71,8 +71,16 @@ export type IFlow<TMethods, TSettings> = {
     gen: (query: Query, settings: TSettings) => JSONRPCResponse<TMethods>[],
   ) => void
   run: () => void
+  changeQuery: (query: string, requery: boolean) => void
+  copyToClipboard: (text: string) => void
+  fuzzySearch: (query: string, stringToCompare: string) => Promise<MatchResult>
+  openUrl: (url: string, inPrivate?: boolean) => void
 }
 
 export type MatchResult = {
   score: number
+  matchData: number[]
+  rawScore: number
+  searchPrecision: 50 | 20 | 0
+  success: boolean
 }
