@@ -12,6 +12,7 @@
 		"check": "biome check --fix ./src"
 	},
 	"dependencies": {
+		"effect": "^3.16.10",
 		"fzf": "^0.5.2",
 		"ts-monadic-parser": "^2.0.3",
 		"vscode-jsonrpc": "^8.2.1"
