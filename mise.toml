@@ -4,3 +4,9 @@
 
 [tasks.build]
   run = "pnpm install && pnpm run build"
+
+[tasks.test]
+  run = "pnpm run test"
+
+[tasks.check]
+  run = "pnpm run check"

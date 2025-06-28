@@ -1,12 +1,12 @@
 {
-  "ID": "224af2d93887868f8179665uy661c2c3",
-  "ActionKeyword": "h",
-  "Name": "ScrapHelp",
-  "Description": "Scrapboxページを検索する",
-  "Author": "NEKN3X",
-  "Version": "1.0.0",
-  "Language": "javascript_v2",
-  "Website": "https://github.com/NEKN3X/Flow.Launcher.Plugin.ScrapHelp",
-  "ExecuteFileName": "dist/index.js",
-  "IcoPath": "Images\\app.png"
+	"ID": "224af2d93887868f8179665uy661c2c3",
+	"ActionKeyword": "h",
+	"Name": "ScrapHelp",
+	"Description": "Scrapboxページを検索する",
+	"Author": "NEKN3X",
+	"Version": "1.0.0",
+	"Language": "javascript_v2",
+	"Website": "https://github.com/NEKN3X/Flow.Launcher.Plugin.ScrapHelp",
+	"ExecuteFileName": "dist/main.js",
+	"IcoPath": "Images\\app.png"
 }

@@ -10,3 +10,8 @@ body:
       name: projects
       label: "projects"
       defaultValue: ""
+  - type: input
+    attributes:
+      name: glossary
+      label: glossary
+      defaultValue:
