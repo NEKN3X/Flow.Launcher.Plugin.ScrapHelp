@@ -1,26 +1,27 @@
 {
-	"name": "scrap-help-v2",
-	"type": "module",
-	"exports": "./dist/main.js",
-	"engines": {
-		"node": ">=18.0.0"
-	},
-	"license": "MIT",
-	"scripts": {
-		"build": "tsc  --project tsconfig.build.json",
-		"test": "vitest run",
-		"check": "biome check --fix ./src"
-	},
-	"dependencies": {
-		"effect": "^3.16.10",
-		"fzf": "^0.5.2",
-		"ts-monadic-parser": "^2.0.3",
-		"vscode-jsonrpc": "^8.2.1"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^2.0.6",
-		"@types/node": "^24.0.1",
-		"typescript": "^5.8.3",
-		"vitest": "^3.2.4"
-	}
+  "name": "scrap-help-v2",
+  "type": "module",
+  "exports": "./dist/main.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc  --project tsconfig.build.json  && tsc-alias",
+    "test": "vitest run",
+    "check": "biome check --fix ./src"
+  },
+  "dependencies": {
+    "effect": "^3.16.10",
+    "fzf": "^0.5.2",
+    "ts-monadic-parser": "^2.0.3",
+    "vscode-jsonrpc": "^8.2.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.0.6",
+    "@types/node": "^24.0.1",
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
 }
