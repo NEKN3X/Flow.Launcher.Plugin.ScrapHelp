@@ -1,0 +1,88 @@
+import type { MessageConnection } from 'vscode-jsonrpc'
+import * as rpc from 'vscode-jsonrpc/node.js'
+import type {
+  _Context,
+  Context,
+  IFlow,
+  JSONRPCResponse,
+  MatchResult,
+  Method,
+  Parameters,
+  Query,
+} from './types.js'
+
+export class Flow<TMethods, TSettings> implements IFlow<TMethods, TSettings> {
+  private _context: Context = {} as Context
+  private connection: MessageConnection
+
+  constructor() {
+    this.connection = rpc.createMessageConnection(
+      new rpc.StreamMessageReader(process.stdin),
+      new rpc.StreamMessageWriter(process.stdout),
+    )
+    this.connection.onRequest('initialize', (ctx: _Context) => {
+      this._context = ctx.currentPluginMetadata
+      return {}
+    })
+  }
+
+  public get context() {
+    return this._context
+  }
+
+  public on(
+    method: Method<TMethods>,
+    handler: (params: Parameters) => Promise<void> | void,
+  ): void {
+    this.connection.onRequest(method, (params) => {
+      handler(params)
+      return {}
+    })
+  }
+
+  public showResult(
+    gen: (query: Query, settings: TSettings) => JSONRPCResponse<TMethods>[],
+  ): void {
+    this.connection.onRequest(
+      'query',
+      async (query: Query, settings: TSettings) => {
+        const result = gen(query, settings)
+        return { result }
+      },
+    )
+  }
+
+  public run(): void {
+    this.connection.listen()
+  }
+
+  public changeQuery(query: string, requery: boolean): void {
+    this.connection.sendRequest('ChangeQuery', { query, requery })
+  }
+
+  public copyToClipboard(text: string): void {
+    this.connection.sendRequest('CopyToClipboard', text)
+  }
+
+  public async fuzzySearch(
+    query: string,
+    stringToCompare: string,
+  ): Promise<MatchResult> {
+    return await this.connection.sendRequest('FuzzySearch', {
+      query,
+      stringToCompare,
+    })
+  }
+
+  public openUrl(url: string, inPrivate?: boolean): void {
+    this.connection.sendRequest('OpenUrl', { url, inPrivate })
+  }
+
+  public showMessage(
+    title: string,
+    subTitle?: string,
+    iconPath?: string,
+  ): void {
+    this.connection.sendRequest('ShowMsg', { title, subTitle, iconPath })
+  }
+}

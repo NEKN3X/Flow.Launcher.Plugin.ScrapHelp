@@ -1,0 +1,78 @@
+export type MethodsObj<T> = {
+  [key in T extends string ? T : string & {}]: () => void
+}
+
+export type ParametersAllowedTypes =
+  | string
+  | number
+  | boolean
+  | Record<string, unknown>
+  | ParametersAllowedTypes[]
+
+export type Method<T> = keyof MethodsObj<T>
+export type Parameters = ParametersAllowedTypes[]
+
+export type JSONRPCResponse<TMethods> = {
+  title: string
+  subTitle?: string
+  glyph?: {
+    glyph: string
+    fontFamily: string
+  }
+  icoPath?: string
+  jsonRPCAction: {
+    method: Method<TMethods>
+    parameters: Parameters
+  }
+  contextData?: JSONRPCResponse<TMethods>[]
+  score?: number
+}
+
+export type _Context = {
+  currentPluginMetadata: Context
+}
+export type Context = {
+  id: string
+  name: string
+  author: string
+  version: string
+  language: string
+  description: string
+  website: string
+  disabled: boolean
+  homeDisabled: boolean
+  executeFilePath: string
+  executeFileName: string
+  pluginDirectory: string
+  actionKeyword: string
+  actionKeywords: string[]
+  hideActionKeywordPanel: boolean
+  icoPath: string
+  pluginSettingsDirectoryPath: string
+  pluginCacheDirectoryPath: string
+}
+
+export type Query = {
+  rawQuery: string
+  isReQuery: boolean
+  isHomeQuery: boolean
+  search: string
+  searchTerms: string[]
+  actionKeyword: string
+}
+
+export type IFlow<TMethods, TSettings> = {
+  context: Context
+  on: (
+    method: Method<TMethods>,
+    handler: (params: Parameters) => Promise<void> | void,
+  ) => void
+  showResult: (
+    gen: (query: Query, settings: TSettings) => JSONRPCResponse<TMethods>[],
+  ) => void
+  run: () => void
+}
+
+export type MatchResult = {
+  score: number
+}

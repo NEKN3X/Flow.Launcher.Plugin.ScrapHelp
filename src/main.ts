@@ -1,33 +1,32 @@
-import type { Query, Settings } from 'types.js'
-import * as rpc from 'vscode-jsonrpc/node.js'
+import { Flow } from './flow/helper.js'
 
-const connection = rpc.createMessageConnection(
-  new rpc.StreamMessageReader(process.stdin),
-  new rpc.StreamMessageWriter(process.stdout),
-)
+interface AppSettings {
+  projects?: string
+  sid?: string
+  glossary?: string
+}
 
-connection.onRequest('initialize', async (params) => {
-  return
-})
+const methods = ['open_url', 'copy_text'] as const
+type AppMethods = (typeof methods)[number]
 
-connection.onRequest('query', async (query: Query, settings: Settings) => {
-  return {
-    result: [
-      {
-        title: 'Sample Result',
-        subTitle: 'This is a sample result item',
-        jsonRPCAction: {
-          method: 'open_url',
-          parameters: ['https://example.com'],
-        },
+const flow = new Flow<AppMethods, AppSettings>()
+
+flow.showResult((query, settings) => {
+  return [
+    {
+      title: flow.context.name + query.search,
+      subTitle: settings.projects || '',
+      jsonRPCAction: {
+        method: 'open_url',
+        parameters: ['https://example.com'],
       },
-    ],
-  }
+    },
+  ]
 })
 
-connection.onRequest('open_url', async (params) => {
-  connection.sendRequest('OpenUrl', params[0])
-  return {}
+flow.on('open_url', (params) => {
+  const url = params[0] as string
+  flow.openUrl(url, true)
 })
 
-connection.listen()
+flow.run()
