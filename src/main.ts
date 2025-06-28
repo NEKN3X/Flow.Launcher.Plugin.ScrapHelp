@@ -1,4 +1,4 @@
-import { Flow } from './flow/helper.js'
+import { Flow } from './helper.js'
 
 interface AppSettings {
   projects?: string
