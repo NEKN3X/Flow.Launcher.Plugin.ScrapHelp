@@ -41,12 +41,15 @@ export class Flow<TMethods, TSettings> implements IFlow<TMethods, TSettings> {
   }
 
   public showResult(
-    gen: (query: Query, settings: TSettings) => JSONRPCResponse<TMethods>[],
+    gen: (
+      query: Query,
+      settings: TSettings,
+    ) => Promise<JSONRPCResponse<TMethods>[]> | JSONRPCResponse<TMethods>[],
   ): void {
     this.connection.onRequest(
       'query',
       async (query: Query, settings: TSettings) => {
-        const result = gen(query, settings)
+        const result = await gen(query, settings)
         return { result }
       },
     )
