@@ -5,7 +5,14 @@
 		"baseUrl": "src",
 		"module": "node16",
 		"moduleResolution": "node16",
-		"paths": {},
+		"paths": {
+			"@core/*": [
+				"core/*"
+			],
+			"@shell/*": [
+				"shell/*"
+			]
+		},
 		"types": [
 			"vitest/globals"
 		],
