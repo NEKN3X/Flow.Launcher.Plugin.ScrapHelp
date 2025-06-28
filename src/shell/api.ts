@@ -4,28 +4,28 @@ const API_BASE_URL = 'https://scrapbox.io/api'
 
 function fetchScrapboxApi(endpoint: string, sid?: string) {
   return Effect.tryPromise({
+    catch: (error) => {
+      throw new Error(`Failed to fetch Scrapbox API: ${error}`)
+    },
     try: () =>
       fetch(`${API_BASE_URL}/${endpoint}`, {
         headers: {
           ...(sid && { Cookie: `connect.sid=${sid}` }),
         },
       }),
-    catch: (error) => {
-      throw new Error(`Failed to fetch Scrapbox API: ${error}`)
-    },
   })
 }
 
 const SearchTitlesResponse = Schema.Array(
   Schema.Struct({
     id: Schema.String,
-    title: Schema.String,
     image: Schema.NullishOr(Schema.String),
+    title: Schema.String,
     updated: Schema.Number,
   }),
 )
 
-export const searchTitles = (project: string, sid?: string) => {
+export function searchTitles(project: string, sid?: string) {
   return fetchScrapboxApi(`pages/${project}/search/titles`, sid).pipe(
     Effect.andThen((response) => {
       if (!response.ok) {
@@ -39,10 +39,10 @@ export const searchTitles = (project: string, sid?: string) => {
     }),
     Effect.flatMap((response) =>
       Effect.tryPromise({
-        try: () => response.text(),
         catch: (error) => {
           throw new Error(`Failed to parse JSON response: ${error}`)
         },
+        try: () => response.text(),
       }),
     ),
     Effect.flatMap((text) => {

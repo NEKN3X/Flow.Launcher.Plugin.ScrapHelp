@@ -1,5 +1,6 @@
 import { searchTitles } from '@shell/api.js'
 import { Effect } from 'effect'
+import type { JSONRPCResponse } from 'types.js'
 import { Flow } from './helper.js'
 
 interface AppSettings {
@@ -14,25 +15,28 @@ type AppMethods = (typeof methods)[number]
 const flow = new Flow<AppMethods, AppSettings>()
 
 flow.showResult(async (query, settings) => {
-  const program = searchTitles('nekn3x', settings.sid)
-  const response = await Effect.runPromise(program)
-  return [
-    {
-      title: flow.context.name + query.search,
-      subTitle: response.map((x) => x.title).join(', '),
-      jsonRPCAction: {
-        method: 'open_url',
-        parameters: ['https://example.com'],
-      },
-    },
-  ]
+  const program = searchTitles('nekn3x', settings.sid).pipe(
+    Effect.map((titles) =>
+      titles.map(
+        (title): JSONRPCResponse<AppMethods> => ({
+          jsonRPCAction: {
+            method: 'open_url',
+            parameters: [title],
+          },
+          subTitle: title.id,
+          title: query + title.title,
+        }),
+      ),
+    ),
+  )
+  return await Effect.runPromise(program)
 })
 
 flow.on('open_url', async (params) => {
   const url = params[0] as string
   const result = await flow.fuzzySearch('aa a', 'CC AA BBB A')
   flow.showMessage(`Fuzzy search result: ${result.success}`)
-  // flow.openUrl(url, true)
+  flow.openUrl(url, true)
 })
 
 flow.run()

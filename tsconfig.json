@@ -1,10 +1,12 @@
 /* https://aka.ms/tsconfig */
 {
 	"compilerOptions": {
-		"target": "es2016",
 		"baseUrl": "src",
+		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
 		"module": "node16",
 		"moduleResolution": "node16",
+		"outDir": "./dist",
 		"paths": {
 			"@core/*": [
 				"core/*"
@@ -13,14 +15,12 @@
 				"shell/*"
 			]
 		},
+		"skipLibCheck": true,
+		"strict": true,
+		"target": "es2016",
 		"types": [
 			"vitest/globals"
-		],
-		"strict": true,
-		"outDir": "./dist",
-		"esModuleInterop": true,
-		"forceConsistentCasingInFileNames": true,
-		"skipLibCheck": true
+		]
 	},
 	"include": [
 		"src/**/*.ts"

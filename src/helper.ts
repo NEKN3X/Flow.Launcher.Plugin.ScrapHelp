@@ -78,7 +78,7 @@ export class Flow<TMethods, TSettings> implements IFlow<TMethods, TSettings> {
   }
 
   public openUrl(url: string, inPrivate?: boolean): void {
-    this.connection.sendRequest('OpenUrl', { url, inPrivate })
+    this.connection.sendRequest('OpenUrl', { inPrivate, url })
   }
 
   public showMessage(
@@ -86,6 +86,6 @@ export class Flow<TMethods, TSettings> implements IFlow<TMethods, TSettings> {
     subTitle?: string,
     iconPath?: string,
   ): void {
-    this.connection.sendRequest('ShowMsg', { title, subTitle, iconPath })
+    this.connection.sendRequest('ShowMsg', { iconPath, subTitle, title })
   }
 }
