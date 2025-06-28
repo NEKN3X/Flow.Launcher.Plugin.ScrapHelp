@@ -1,3 +1,5 @@
+import { searchTitles } from '@shell/api.js'
+import { Effect } from 'effect'
 import { Flow } from './helper.js'
 
 interface AppSettings {
@@ -11,11 +13,13 @@ type AppMethods = (typeof methods)[number]
 
 const flow = new Flow<AppMethods, AppSettings>()
 
-flow.showResult((query, settings) => {
+flow.showResult(async (query, settings) => {
+  const program = searchTitles('nekn3x', settings.sid)
+  const response = await Effect.runPromise(program)
   return [
     {
       title: flow.context.name + query.search,
-      subTitle: settings.projects || '',
+      subTitle: response.map((x) => x.title).join(', '),
       jsonRPCAction: {
         method: 'open_url',
         parameters: ['https://example.com'],
@@ -24,9 +28,11 @@ flow.showResult((query, settings) => {
   ]
 })
 
-flow.on('open_url', (params) => {
+flow.on('open_url', async (params) => {
   const url = params[0] as string
-  flow.openUrl(url, true)
+  const result = await flow.fuzzySearch('aa a', 'CC AA BBB A')
+  flow.showMessage(`Fuzzy search result: ${result.score}`)
+  // flow.openUrl(url, true)
 })
 
 flow.run()
