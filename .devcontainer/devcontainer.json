@@ -12,12 +12,7 @@
 			"extensions": [
 				"tamasfe.even-better-toml",
 				"biomejs.biome",
-				"chrisbibby.hide-node-modules",
-				"eamodio.gitlens",
-				"ionutvmi.path-autocomplete",
-				"pedrohenrique-ql.regex-match",
-				"redhat.vscode-yaml",
-				"silesky.toggle-boolean"
+				"redhat.vscode-yaml"
 			]
 		}
 	},
