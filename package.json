@@ -1,5 +1,5 @@
 {
-  "name": "scrap-help-v2",
+  "name": "scrap-help",
   "type": "module",
   "exports": "./dist/main.js",
   "engines": {
