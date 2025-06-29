@@ -1,6 +1,7 @@
 [tools]
-  node = "latest"
-  pnpm = "latest"
+  gleam = "latest"
+  node  = "latest"
+  pnpm  = "latest"
 
 [tasks.install]
   run = "pnpm install"
