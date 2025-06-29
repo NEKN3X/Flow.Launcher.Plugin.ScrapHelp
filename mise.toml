@@ -2,6 +2,9 @@
   node = "latest"
   pnpm = "latest"
 
+[tasks.install]
+  run = "pnpm install"
+
 [tasks.build]
   run = "pnpm install && pnpm run build"
 
