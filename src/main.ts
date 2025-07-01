@@ -1,5 +1,4 @@
 import { searchTitles } from "@shell/api.js"
-import { Effect } from "effect"
 import type { JSONRPCResponse } from "types.js"
 import { Flow } from "./helper.js"
 
@@ -16,24 +15,23 @@ const flow = new Flow<AppMethods, AppSettings>()
 
 flow.showResult(async (query, settings) => {
   const projects = settings.projects?.split(",") || []
-  const program = Effect.all(
+  const result = await Promise.all(
     projects.map((projectName) =>
-      searchTitles(projectName, settings.sid).pipe(
-        Effect.map((titles) =>
-          titles.map(
-            (title): JSONRPCResponse<AppMethods> => ({
-              title: title.title,
-              jsonRPCAction: {
-                method: "open_url",
-                parameters: [title],
-              },
-            }),
-          ),
+      searchTitles(projectName, settings.sid).then((titles) =>
+        titles.map(
+          (title): JSONRPCResponse<AppMethods> => ({
+            title: title.title,
+            jsonRPCAction: {
+              method: "open_url",
+              parameters: [title],
+            },
+          }),
         ),
       ),
     ),
-  ).pipe(Effect.map((results) => results.flat()))
-  return await Effect.runPromise(program)
+  ).then((results) => results.flat())
+
+  return result
 })
 
 flow.on("open_url", async (params) => {
