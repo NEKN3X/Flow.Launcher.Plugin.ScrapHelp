@@ -34,7 +34,11 @@ flow.showResult(async (query, settings) => {
       ),
     ),
   ).pipe(Effect.map((results) => results.flat()))
-  return await Effect.runPromise(program)
+  const result = await Effect.runPromise(program).catch((error) => {
+    flow.showMessage(`Error: ${error.message}`, "error")
+    return []
+  })
+  return result
 })
 
 flow.on("open_url", async (params) => {
