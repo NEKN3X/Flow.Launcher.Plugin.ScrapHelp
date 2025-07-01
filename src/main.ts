@@ -22,12 +22,11 @@ flow.showResult(async (query, settings) => {
         Effect.map((titles) =>
           titles.map(
             (title): JSONRPCResponse<AppMethods> => ({
+              title: title.title,
               jsonRPCAction: {
                 method: "open_url",
                 parameters: [title],
               },
-              subTitle: title.id,
-              title: title.title,
             }),
           ),
         ),
