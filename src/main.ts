@@ -1,4 +1,6 @@
 import { searchTitles } from "@shell/api.js"
+import { Fzf } from "fzf"
+import { search } from "search.js"
 import type { JSONRPCResponse } from "types.js"
 import { Flow } from "./helper.js"
 
@@ -31,7 +33,25 @@ flow.showResult(async (query, settings) => {
     ),
   ).then((results) => results.flat())
 
-  return result
+  const filteredResult = search(
+    result,
+    query.search,
+    (item) => item.title,
+  ).reduce(
+    (acc, a) =>
+      acc.some(
+        (b) =>
+          a.jsonRPCAction.method === "open_url" &&
+          a.jsonRPCAction.method === b.jsonRPCAction.method &&
+          a.icoPath === b.icoPath &&
+          a.jsonRPCAction.parameters[0] === b.jsonRPCAction.parameters[0],
+      )
+        ? acc
+        : acc.concat(a),
+    [] as JSONRPCResponse<AppMethods>[],
+  )
+
+  return filteredResult
 })
 
 flow.on("open_url", async (params) => {
