@@ -3,7 +3,7 @@
   pnpm = "latest"
 
 [tasks.build]
-  run = "pnpm install && rm -rf dist && pnpm run build"
+  run = "pnpm install && pnpm run build"
 
 [tasks.test]
   run = "pnpm run test"
