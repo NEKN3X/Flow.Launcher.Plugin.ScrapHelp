@@ -16,6 +16,7 @@ const flow = new Flow<AppMethods, AppSettings>()
 
 flow.showResult(async (query, settings) => {
   const projects = settings.projects?.split(",") || []
+  flow.showMessage(`Searching in projects: ${projects.join(", ")}`)
   const program = Effect.all(
     projects.map((projectName) =>
       searchTitles(projectName, settings.sid).pipe(
