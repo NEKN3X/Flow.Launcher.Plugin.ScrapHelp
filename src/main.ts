@@ -1,7 +1,7 @@
-import { searchTitles } from '@shell/api.js'
-import { Effect } from 'effect'
-import type { JSONRPCResponse } from 'types.js'
-import { Flow } from './helper.js'
+import { searchTitles } from "@shell/api.js"
+import { Effect } from "effect"
+import type { JSONRPCResponse } from "types.js"
+import { Flow } from "./helper.js"
 
 interface AppSettings {
   projects?: string
@@ -9,18 +9,18 @@ interface AppSettings {
   glossary?: string
 }
 
-const methods = ['open_url', 'copy_text'] as const
+const methods = ["open_url", "copy_text"] as const
 type AppMethods = (typeof methods)[number]
 
 const flow = new Flow<AppMethods, AppSettings>()
 
 flow.showResult(async (query, settings) => {
-  const program = searchTitles('nekn3x', settings.sid).pipe(
+  const program = searchTitles("nekn3x", settings.sid).pipe(
     Effect.map((titles) =>
       titles.map(
         (title): JSONRPCResponse<AppMethods> => ({
           jsonRPCAction: {
-            method: 'open_url',
+            method: "open_url",
             parameters: [title],
           },
           subTitle: title.id,
@@ -32,9 +32,9 @@ flow.showResult(async (query, settings) => {
   return await Effect.runPromise(program)
 })
 
-flow.on('open_url', async (params) => {
+flow.on("open_url", async (params) => {
   const url = params[0] as string
-  const result = await flow.fuzzySearch('aa a', 'CC AA BBB A')
+  const result = await flow.fuzzySearch("aa a", "CC AA BBB A")
   flow.showMessage(`Fuzzy search result: ${result.success}`)
   flow.openUrl(url, true)
 })

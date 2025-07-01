@@ -1,5 +1,5 @@
-import type { MessageConnection } from 'vscode-jsonrpc'
-import * as rpc from 'vscode-jsonrpc/node.js'
+import type { MessageConnection } from "vscode-jsonrpc"
+import * as rpc from "vscode-jsonrpc/node.js"
 import type {
   _Context,
   Context,
@@ -9,7 +9,7 @@ import type {
   Method,
   Parameters,
   Query,
-} from './types.js'
+} from "./types.js"
 
 export class Flow<TMethods, TSettings> implements IFlow<TMethods, TSettings> {
   private _context: Context = {} as Context
@@ -20,7 +20,7 @@ export class Flow<TMethods, TSettings> implements IFlow<TMethods, TSettings> {
       new rpc.StreamMessageReader(process.stdin),
       new rpc.StreamMessageWriter(process.stdout),
     )
-    this.connection.onRequest('initialize', (ctx: _Context) => {
+    this.connection.onRequest("initialize", (ctx: _Context) => {
       this._context = ctx.currentPluginMetadata
       return {}
     })
@@ -47,7 +47,7 @@ export class Flow<TMethods, TSettings> implements IFlow<TMethods, TSettings> {
     ) => Promise<JSONRPCResponse<TMethods>[]> | JSONRPCResponse<TMethods>[],
   ): void {
     this.connection.onRequest(
-      'query',
+      "query",
       async (query: Query, settings: TSettings) => {
         const result = await gen(query, settings)
         return { result }
@@ -60,25 +60,25 @@ export class Flow<TMethods, TSettings> implements IFlow<TMethods, TSettings> {
   }
 
   public changeQuery(query: string, requery: boolean): void {
-    this.connection.sendRequest('ChangeQuery', { query, requery })
+    this.connection.sendRequest("ChangeQuery", { query, requery })
   }
 
   public copyToClipboard(text: string): void {
-    this.connection.sendRequest('CopyToClipboard', text)
+    this.connection.sendRequest("CopyToClipboard", text)
   }
 
   public async fuzzySearch(
     query: string,
     stringToCompare: string,
   ): Promise<MatchResult> {
-    return await this.connection.sendRequest('FuzzySearch', {
+    return await this.connection.sendRequest("FuzzySearch", {
       query,
       stringToCompare,
     })
   }
 
   public openUrl(url: string, inPrivate?: boolean): void {
-    this.connection.sendRequest('OpenUrl', { inPrivate, url })
+    this.connection.sendRequest("OpenUrl", { inPrivate, url })
   }
 
   public showMessage(
@@ -86,6 +86,6 @@ export class Flow<TMethods, TSettings> implements IFlow<TMethods, TSettings> {
     subTitle?: string,
     iconPath?: string,
   ): void {
-    this.connection.sendRequest('ShowMsg', { iconPath, subTitle, title })
+    this.connection.sendRequest("ShowMsg", { iconPath, subTitle, title })
   }
 }

@@ -1,6 +1,6 @@
-import { Effect, Schema } from 'effect'
+import { Effect, Schema } from "effect"
 
-const API_BASE_URL = 'https://scrapbox.io/api'
+const API_BASE_URL = "https://scrapbox.io/api"
 
 function fetchScrapboxApi(endpoint: string, sid?: string) {
   return Effect.tryPromise({
