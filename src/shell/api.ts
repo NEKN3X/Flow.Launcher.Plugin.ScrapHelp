@@ -75,7 +75,7 @@ export function getScrapboxPage(project: string, title: string, sid?: string) {
       }
       return Effect.succeed(response)
     }),
-    Effect.flatMap((response) => Effect.promise(response.text)),
+    Effect.flatMap((response) => Effect.promise(() => response.text())),
     Effect.flatMap((text) => {
       const parser = Schema.parseJson(GetScrapboxPageResponse)
       const decode = Schema.decode(parser)
@@ -104,6 +104,6 @@ export function getScrapboxFile(
       }
       return Effect.succeed(response)
     }),
-    Effect.flatMap((response) => Effect.promise(response.text)),
+    Effect.flatMap((response) => Effect.promise(() => response.text())),
   )
 }
