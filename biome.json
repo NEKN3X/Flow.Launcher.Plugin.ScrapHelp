@@ -1,20 +1,9 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
-  "assist": {
-    "actions": {
-      "source": {
-        "organizeImports": "on",
-        "useSortedAttributes": "on",
-        "useSortedProperties": "on"
-      }
-    },
-    "enabled": true
-  },
   "files": {
-    "ignoreUnknown": false
+    "includes": ["**", "!dist"]
   },
   "formatter": {
-    "enabled": true,
     "indentStyle": "space"
   },
   "javascript": {
@@ -23,14 +12,19 @@
     }
   },
   "linter": {
-    "enabled": true,
     "rules": {
       "recommended": true
     }
   },
-  "vcs": {
-    "clientKind": "git",
-    "enabled": false,
-    "useIgnoreFile": false
+  "assist": {
+    "actions": {
+      "recommended": true,
+      "source": {
+        "recommended": true,
+        "organizeImports": "on",
+        "useSortedAttributes": "on",
+        "useSortedProperties": "on"
+      }
+    }
   }
 }

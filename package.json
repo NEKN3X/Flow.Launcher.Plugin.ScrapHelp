@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc  --project tsconfig.build.json  && tsc-alias",
     "test": "vitest run",
-    "check": "biome check --fix ./src"
+    "check": "biome check --fix"
   },
   "dependencies": {
     "effect": "^3.16.10",
