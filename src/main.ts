@@ -1,8 +1,6 @@
 import { extractGlossary } from "@core/help/extractGlossary.js"
 import { extractHelp } from "@core/help/extractHelp.js"
 import { expandHelpfeel } from "@core/help/parser.js"
-import { replaceGlossary } from "@core/help/replaceGlossary.js"
-import type { Glossary } from "@core/help/types.js"
 import { scrapboxUrl } from "@core/scrapbox/scrapboxUrl.js"
 import { getScrapboxFile } from "@shell/api.js"
 import { getScrapboxPages } from "@shell/pages.js"
