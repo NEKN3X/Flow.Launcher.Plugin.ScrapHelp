@@ -16,7 +16,6 @@ const flow = new Flow<AppMethods, AppSettings>()
 
 flow.showResult(async (query, settings) => {
   const projects = settings.projects?.split(",") || []
-  flow.showMessage(`Searching in projects: ${projects.join(", ")}`)
   const program = Effect.all(
     projects.map((projectName) =>
       searchTitles(projectName, settings.sid).pipe(
@@ -34,11 +33,7 @@ flow.showResult(async (query, settings) => {
       ),
     ),
   ).pipe(Effect.map((results) => results.flat()))
-  const result = await Effect.runPromise(program).catch((error) => {
-    flow.showMessage(`Error: ${error.message}`, "error")
-    return []
-  })
-  return result
+  return await Effect.runPromise(program)
 })
 
 flow.on("open_url", async (params) => {

@@ -37,7 +37,7 @@ export function searchTitles(project: string, sid?: string) {
       }
       return Effect.succeed(response)
     }),
-    Effect.flatMap((response) => Effect.promise(response.text)),
+    Effect.flatMap((response) => Effect.promise(() => response.text())),
     Effect.flatMap((text) => {
       const parser = Schema.parseJson(SearchTitlesResponse)
       const decode = Schema.decode(parser)
