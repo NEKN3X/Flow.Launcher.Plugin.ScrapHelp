@@ -15,7 +15,7 @@ type AppMethods = (typeof methods)[number]
 const flow = new Flow<AppMethods, AppSettings>()
 
 flow.showResult(async (query, settings) => {
-  const program = searchTitles("custom", settings.sid).pipe(
+  const program = searchTitles("nekn3x", settings.sid).pipe(
     Effect.map((titles) =>
       titles.map(
         (title): JSONRPCResponse<AppMethods> => ({
