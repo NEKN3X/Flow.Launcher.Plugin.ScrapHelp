@@ -15,20 +15,25 @@ type AppMethods = (typeof methods)[number]
 const flow = new Flow<AppMethods, AppSettings>()
 
 flow.showResult(async (query, settings) => {
-  const program = searchTitles("nekn3x", settings.sid).pipe(
-    Effect.map((titles) =>
-      titles.map(
-        (title): JSONRPCResponse<AppMethods> => ({
-          jsonRPCAction: {
-            method: "open_url",
-            parameters: [title],
-          },
-          subTitle: title.id,
-          title: query + title.title,
-        }),
+  const projects = settings.projects?.split(",") || []
+  const program = Effect.all(
+    projects.map((projectName) =>
+      searchTitles(projectName, settings.sid).pipe(
+        Effect.map((titles) =>
+          titles.map(
+            (title): JSONRPCResponse<AppMethods> => ({
+              jsonRPCAction: {
+                method: "open_url",
+                parameters: [title],
+              },
+              subTitle: title.id,
+              title: title.title,
+            }),
+          ),
+        ),
       ),
     ),
-  )
+  ).pipe(Effect.map((results) => results.flat()))
   return await Effect.runPromise(program)
 })
 

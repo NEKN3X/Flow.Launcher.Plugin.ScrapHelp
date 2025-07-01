@@ -13,5 +13,5 @@ body:
   - type: input
     attributes:
       name: glossary
-      label: glossary
-      defaultValue:
+      label: GlossaryページのURL
+      defaultValue: ""
