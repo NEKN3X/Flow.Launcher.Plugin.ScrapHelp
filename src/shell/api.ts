@@ -16,7 +16,7 @@ function fetchScrapboxApi(endpoint: string, sid?: string) {
   })
 }
 
-const SearchTitlesResponse = Schema.Array(
+export const SearchTitlesResponse = Schema.Array(
   Schema.Struct({
     id: Schema.String,
     image: Schema.NullishOr(Schema.String),
@@ -25,30 +25,32 @@ const SearchTitlesResponse = Schema.Array(
   }),
 )
 
+export type SearchTitlesResponse = Schema.Schema.Type<
+  typeof SearchTitlesResponse
+>
+
 export function searchTitles(project: string, sid?: string) {
-  return Effect.runPromise(
-    fetchScrapboxApi(`pages/${project}/search/titles`, sid).pipe(
-      Effect.andThen((response) => {
-        if (!response.ok) {
-          return Effect.fail(
-            new Error(
-              `searchTitles failed: ${response.status} ${response.statusText}`,
-            ),
-          )
-        }
-        return Effect.succeed(response)
-      }),
-      Effect.flatMap((response) => Effect.promise(() => response.text())),
-      Effect.flatMap((text) => {
-        const parser = Schema.parseJson(SearchTitlesResponse)
-        const decode = Schema.decode(parser)
-        return decode(text)
-      }),
-    ),
+  return fetchScrapboxApi(`pages/${project}/search/titles`, sid).pipe(
+    Effect.andThen((response) => {
+      if (!response.ok) {
+        return Effect.fail(
+          new Error(
+            `searchTitles failed: ${response.status} ${response.statusText}`,
+          ),
+        )
+      }
+      return Effect.succeed(response)
+    }),
+    Effect.flatMap((response) => Effect.promise(() => response.text())),
+    Effect.flatMap((text) => {
+      const parser = Schema.parseJson(SearchTitlesResponse)
+      const decode = Schema.decode(parser)
+      return decode(text)
+    }),
   )
 }
 
-const GetScrapboxPageResponse = Schema.Struct({
+export const GetScrapboxPageResponse = Schema.Struct({
   id: Schema.String,
   title: Schema.String,
   image: Schema.NullishOr(Schema.String),
@@ -62,26 +64,29 @@ const GetScrapboxPageResponse = Schema.Struct({
   ),
 })
 
+export type ScrapboxPage = Schema.Schema.Type<typeof GetScrapboxPageResponse>
+
 export function getScrapboxPage(project: string, title: string, sid?: string) {
-  return Effect.runPromise(
-    fetchScrapboxApi(`pages/${project}/${encodeURIComponent(title)}`, sid).pipe(
-      Effect.andThen((response) => {
-        if (!response.ok) {
-          return Effect.fail(
-            new Error(
-              `getScrapboxPage failed: ${response.status} ${response.statusText}`,
-            ),
-          )
-        }
-        return Effect.succeed(response)
-      }),
-      Effect.flatMap((response) => Effect.promise(() => response.text())),
-      Effect.flatMap((text) => {
-        const parser = Schema.parseJson(GetScrapboxPageResponse)
-        const decode = Schema.decode(parser)
-        return decode(text)
-      }),
-    ),
+  return fetchScrapboxApi(
+    `pages/${project}/${encodeURIComponent(title)}`,
+    sid,
+  ).pipe(
+    Effect.andThen((response) => {
+      if (!response.ok) {
+        return Effect.fail(
+          new Error(
+            `getScrapboxPage failed: ${response.status} ${response.statusText}`,
+          ),
+        )
+      }
+      return Effect.succeed(response)
+    }),
+    Effect.flatMap((response) => Effect.promise(() => response.text())),
+    Effect.flatMap((text) => {
+      const parser = Schema.parseJson(GetScrapboxPageResponse)
+      const decode = Schema.decode(parser)
+      return decode(text)
+    }),
   )
 }
 
@@ -91,22 +96,20 @@ export function getScrapboxFile(
   fileName: string,
   sid?: string,
 ) {
-  return Effect.runPromise(
-    fetchScrapboxApi(
-      `code/${project}/${encodeURIComponent(title)}/${encodeURIComponent(fileName)}`,
-      sid,
-    ).pipe(
-      Effect.andThen((response) => {
-        if (!response.ok) {
-          return Effect.fail(
-            new Error(
-              `getScrapboxFile failed: ${response.status} ${response.statusText}`,
-            ),
-          )
-        }
-        return Effect.succeed(response)
-      }),
-      Effect.flatMap((response) => Effect.promise(() => response.text())),
-    ),
+  return fetchScrapboxApi(
+    `code/${project}/${encodeURIComponent(title)}/${encodeURIComponent(fileName)}`,
+    sid,
+  ).pipe(
+    Effect.andThen((response) => {
+      if (!response.ok) {
+        return Effect.fail(
+          new Error(
+            `getScrapboxFile failed: ${response.status} ${response.statusText}`,
+          ),
+        )
+      }
+      return Effect.succeed(response)
+    }),
+    Effect.flatMap((response) => Effect.promise(() => response.text())),
   )
 }

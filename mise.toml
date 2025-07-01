@@ -10,3 +10,6 @@
 
 [tasks.check]
   run = "pnpm run check"
+
+[tasks.check-unsafe]
+  run = "pnpm run check:unsafe"

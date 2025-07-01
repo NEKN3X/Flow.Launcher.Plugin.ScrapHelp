@@ -15,13 +15,14 @@ export class Flow<TMethods, TSettings> implements IFlow<TMethods, TSettings> {
   private _context: Context = {} as Context
   private connection: MessageConnection
 
-  constructor() {
+  constructor(init?: (ctx: Context) => Promise<void> | void) {
     this.connection = rpc.createMessageConnection(
       new rpc.StreamMessageReader(process.stdin),
       new rpc.StreamMessageWriter(process.stdout),
     )
-    this.connection.onRequest("initialize", (ctx: _Context) => {
+    this.connection.onRequest("initialize", async (ctx: _Context) => {
       this._context = ctx.currentPluginMetadata
+      await init?.(this._context)
       return {}
     })
   }

@@ -1,4 +1,4 @@
-import type { ScrapboxPage } from "@core/scrapbox/types.js"
+import type { ScrapboxPage } from "@shell/api.js"
 
 export type ScrapboxPageHelp = {
   type: "scrapbox_page"
@@ -12,7 +12,7 @@ export type WebPageHelp = {
   helpfeel: string
   project: string
   title: string
-  url: string
+  url: URL
 }
 
 export type TextHelp = {
