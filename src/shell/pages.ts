@@ -3,11 +3,30 @@ import { Effect } from "effect"
 import { getScrapboxPage, type ScrapboxPage, searchTitles } from "./api.js"
 import { readStorage, writeStorage } from "./storage.js"
 
+// メモリキャッシュの型定義
+interface MemoryCacheEntry {
+  data: { project: string; pages: ScrapboxPage[] }[]
+  timestamp: number
+}
+
+// メモリキャッシュ（TTL: 30秒）
+const memoryCache = new Map<string, MemoryCacheEntry>()
+const CACHE_TTL = 30 * 1000 // 30秒
+
 export function getScrapboxPages(
   cachePath: string,
   projects: string[],
   sid?: string,
 ) {
+  // メモリキャッシュのキーを生成
+  const cacheKey = JSON.stringify({ projects: projects.sort(), sid })
+
+  // メモリキャッシュをチェック
+  const cached = memoryCache.get(cacheKey)
+  if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+    return Effect.succeed(cached.data)
+  }
+
   const readCache = readStorage(cachePath)
   const writeCache = writeStorage(cachePath)
 
@@ -51,7 +70,17 @@ export function getScrapboxPages(
         })),
       ),
     ),
-  ).pipe(Effect.map((results) => results.flat()))
+  ).pipe(
+    Effect.map((results) => results.flat()),
+    Effect.tap((data) => {
+      // 結果をメモリキャッシュに保存
+      memoryCache.set(cacheKey, {
+        data,
+        timestamp: Date.now(),
+      })
+      return Effect.succeed(data)
+    }),
+  )
 
   return program
 }
