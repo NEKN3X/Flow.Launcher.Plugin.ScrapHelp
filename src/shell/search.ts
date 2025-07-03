@@ -1,4 +1,4 @@
-import type { FzfOptions, FzfResultItem } from "fzf"
+import type { FzfResultItem } from "fzf"
 import { Fzf } from "fzf"
 
 export function search<T>(
