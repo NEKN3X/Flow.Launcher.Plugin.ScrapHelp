@@ -3,7 +3,9 @@ import { replaceGlossary } from "./replaceGlossary.js"
 import type { Glossary, Help } from "./types.js"
 
 const helpfeelRegex = /^\?\s+(\S.*)$/
-const webHelpRegex = /^(%|\$)\s+(http.+)$/
+const webHelpRegex = /^[%$]\s+(http.+)$/
+const webHelpRegex2 = /^\[.*\s+(http.+)\]$/
+const webHelpRegex3 = /^\[(http\S+)\s+.*\]$/
 const fileHelpRegex = /^%\s+(.+)$/
 const textHelpRegex = /^\$\s+(.+)$/
 
@@ -19,14 +21,17 @@ export function extractHelp(
 
     const helpfeelText = replaceGlossary(helpfeelMatch[1], glossary)
 
-    const webHelpMatch = nextLine.match(webHelpRegex)
+    const webHelpMatch =
+      nextLine.match(webHelpRegex) ||
+      nextLine.match(webHelpRegex2) ||
+      nextLine.match(webHelpRegex3)
     if (webHelpMatch) {
       return acc.concat({
         type: "web_page",
         project,
         title: page.title,
         helpfeel: helpfeelText,
-        url: new URL(replaceGlossary(webHelpMatch[2], glossary)),
+        url: new URL(replaceGlossary(webHelpMatch[1], glossary)),
       })
     }
 
