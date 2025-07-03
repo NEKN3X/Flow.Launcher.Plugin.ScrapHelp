@@ -4,8 +4,8 @@
     "baseUrl": "src",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "node16",
-    "moduleResolution": "node16",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "outDir": "./dist",
     "paths": {
       "@core/*": ["core/*"],
@@ -13,7 +13,7 @@
     },
     "skipLibCheck": true,
     "strict": true,
-    "target": "es2016",
+    "target": "esnext",
     "types": ["vitest/globals"]
   },
   "include": ["src/**/*.ts"]

@@ -78,7 +78,7 @@ flow.showResult(async (query, settings) => {
                     case "web_page":
                       return {
                         title: h.helpfeel,
-                        subTitle: `${h.url.hostname}${h.url.pathname}`,
+                        subTitle: `${h.url.hostname}${h.url.pathname}${h.url.search}`,
                         icoPath: "assets/globe.png",
                         jsonRPCAction: {
                           method: "open_url",
